@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60">
+  <style>
+    .text { font-family: Arial, sans-serif; font-weight: bold; }
+    .title { font-size: 24px; fill: #2563eb; }
+    .subtitle { font-size: 14px; fill: #4b5563; }
+    .tool { fill: #2563eb; }
+  </style>
+  <rect width="240" height="60" fill="white" rx="10" ry="10" />
+  <g transform="translate(10, 35)">
+    <path class="tool" d="M22,0 L28,0 L25,10 L19,10 Z M3,7 L9,7 L12,11 L22,11 L25,7 L28,7 L31,16 L0,16 Z" />
+    <path class="tool" d="M15,0 L15,5 L12,7 L18,7 L15,5 Z" />
+  </g>
+  <text x="50" y="32" class="text title">منصة الحرفيين</text>
+  <text x="55" y="48" class="text subtitle">خدمات حرفية احترافية</text>
+</svg> 

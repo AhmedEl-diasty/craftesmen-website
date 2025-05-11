@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تواصل مع الحرفي - منصة الحرفيين</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .worker-profile {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .worker-img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .rating {
+      color: #ffc107;
+    }
+    
+    .booking-form {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .form-label {
+      font-weight: 600;
+    }
+    
+    .price-badge {
+      background: var(--primary-color);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.svg" alt="منصة الحرفيين" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">الرئيسية</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="user-dashboard.html">لوحة التحكم</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="user-dashboard.html" class="btn btn-outline-primary me-2">
+            <i class="bi bi-person-circle me-1"></i>
+            حسابي
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="worker-profile mb-4">
+          <div class="text-center mb-4">
+            <img id="workerImage" src="" alt="" class="worker-img mb-3">
+            <h4 id="workerName"></h4>
+            <p class="text-muted mb-2" id="workerProfession"></p>
+            <div class="rating mb-2">
+              <i class="bi bi-star-fill"></i>
+              <span id="workerRating"></span>
+              <small class="text-muted">(<span id="workerReviews"></span> تقييم)</small>
+            </div>
+            <span class="price-badge" id="workerPrice"></span>
+          </div>
+          <p class="text-muted" id="workerDescription"></p>
+        </div>
+      </div>
+      
+      <div class="col-lg-8">
+        <div class="booking-form">
+          <h4 class="mb-4">حجز موعد</h4>
+          <form id="bookingForm">
+            <div class="mb-3">
+              <label for="serviceType" class="form-label">نوع الخدمة</label>
+              <select class="form-select" id="serviceType" required>
+                <option value="">اختر نوع الخدمة</option>
+                <option value="consultation">استشارة</option>
+                <option value="repair">إصلاح</option>
+                <option value="installation">تركيب</option>
+                <option value="maintenance">صيانة</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="date" class="form-label">التاريخ</label>
+              <input type="date" class="form-control" id="date" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="time" class="form-label">الوقت</label>
+              <select class="form-select" id="time" required>
+                <option value="">اختر الوقت</option>
+                <option value="09:00">09:00 صباحاً</option>
+                <option value="10:00">10:00 صباحاً</option>
+                <option value="11:00">11:00 صباحاً</option>
+                <option value="12:00">12:00 ظهراً</option>
+                <option value="13:00">01:00 مساءً</option>
+                <option value="14:00">02:00 مساءً</option>
+                <option value="15:00">03:00 مساءً</option>
+                <option value="16:00">04:00 مساءً</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="address" class="form-label">العنوان</label>
+              <textarea class="form-control" id="address" rows="3" required></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="notes" class="form-label">ملاحظات إضافية</label>
+              <textarea class="form-control" id="notes" rows="3"></textarea>
+            </div>
+            
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-calendar-check me-2"></i>
+                تأكيد الحجز
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get worker ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const workerId = urlParams.get('id');
+      
+      // Sample worker data (in a real app, this would come from an API)
+      const workers = {
+        '1': {
+          name: 'أحمد محمد',
+          profession: 'نجار',
+          rating: 4.5,
+          reviews: 120,
+          price: 400,
+          image: 'images/worker1.jpg',
+          description: 'خبرة 10 سنوات في أعمال النجارة والديكور'
+        },
+        '2': {
+          name: 'محمد علي',
+          profession: 'كهربائي',
+          rating: 4.8,
+          reviews: 85,
+          price: 350,
+          image: 'images/worker2.jpg',
+          description: 'متخصص في أعمال الكهرباء المنزلية'
+        },
+        '3': {
+          name: 'علي أحمد',
+          profession: 'نجار',
+          rating: 4.2,
+          reviews: 65,
+          price: 600,
+          image: 'images/worker3.jpg',
+          description: 'خبرة 8 سنوات في أعمال النجارة'
+        },
+        '4': {
+          name: 'محمود سعيد',
+          profession: 'كهربائي',
+          rating: 4.9,
+          reviews: 150,
+          price: 800,
+          image: 'images/worker4.jpg',
+          description: 'متخصص في أعمال الكهرباء الصناعية'
+        }
+      };
+      
+      const worker = workers[workerId];
+      
+      if (!worker) {
+        // Show error message if worker not found
+        document.querySelector('.container').innerHTML = `
+          <div class="alert alert-danger text-center">
+            <i class="bi bi-exclamation-triangle-fill display-1 mb-3"></i>
+            <h4 class="mb-3">لم يتم العثور على الحرفي</h4>
+            <p class="mb-3">عذراً، لم يتم العثور على الحرفي المطلوب</p>
+            <a href="workers-list.html" class="btn btn-primary">
+              <i class="bi bi-arrow-right me-2"></i>
+              العودة لقائمة الحرفيين
+            </a>
+          </div>
+        `;
+        return;
+      }
+      
+      // Update worker profile
+      document.getElementById('workerImage').src = worker.image;
+      document.getElementById('workerName').textContent = worker.name;
+      document.getElementById('workerProfession').textContent = worker.profession;
+      document.getElementById('workerRating').textContent = worker.rating;
+      document.getElementById('workerReviews').textContent = worker.reviews;
+      document.getElementById('workerPrice').textContent = worker.price + ' جنيه';
+      document.getElementById('workerDescription').textContent = worker.description;
+      
+      // Handle form submission
+      document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        const serviceType = document.getElementById('serviceType').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const address = document.getElementById('address').value;
+        
+        if (!serviceType || !date || !time || !address) {
+          alert('الرجاء ملء جميع الحقول المطلوبة');
+          return;
+        }
+        
+        const bookingData = {
+          workerId: workerId,
+          workerName: worker.name,
+          serviceType: serviceType,
+          date: date,
+          time: time,
+          address: address,
+          notes: document.getElementById('notes').value,
+          price: worker.price
+        };
+        
+        // Store booking data in localStorage
+        const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+        bookings.push(bookingData);
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+        
+        // Show success message
+        const successMessage = `
+          <div class="alert alert-success text-center">
+            <i class="bi bi-check-circle-fill display-1 mb-3"></i>
+            <h4 class="mb-3">تم حجز الموعد بنجاح!</h4>
+            <p class="mb-3">سيتم التواصل معك قريباً لتأكيد الحجز</p>
+            <div class="d-grid gap-2">
+              <a href="user-dashboard.html" class="btn btn-primary">
+                <i class="bi bi-person-circle me-2"></i>
+                الذهاب للوحة التحكم
+              </a>
+              <a href="workers-list.html" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-right me-2"></i>
+                العودة لقائمة الحرفيين
+              </a>
+            </div>
+          </div>
+        `;
+        
+        document.querySelector('.container').innerHTML = successMessage;
+      });
+      
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('date').min = today;
+      
+      // Disable past times for today
+      const timeSelect = document.getElementById('time');
+      const now = new Date();
+      const currentHour = now.getHours();
+      
+      if (document.getElementById('date').value === today) {
+        Array.from(timeSelect.options).forEach(option => {
+          const hour = parseInt(option.value.split(':')[0]);
+          option.disabled = hour <= currentHour;
+        });
+      }
+      
+      // Update time options when date changes
+      document.getElementById('date').addEventListener('change', function() {
+        const selectedDate = this.value;
+        const isToday = selectedDate === today;
+        
+        Array.from(timeSelect.options).forEach(option => {
+          if (option.value) {
+            const hour = parseInt(option.value.split(':')[0]);
+            option.disabled = isToday && hour <= currentHour;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي - منصة الحرفيين</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+        }
+        .btn-primary {
+            background: #2563eb;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+        .profile-picture-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+        }
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2563eb;
+            background-color: #e9ecef;
+        }
+        .upload-icon {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #2563eb;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .upload-icon:hover {
+            background-color: #1e40af;
+            transform: scale(1.1);
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        .status-badge {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        #profilePictureInput {
+            display: none;
+        }
+        /* أنماط معرض الأعمال */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 15px;
+            margin-top: 20px;
+        }
+        /* التبديل إلى عرض شبكي عادي */
+        #workGallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .gallery-img {
+            height: 180px;
+            object-fit: cover;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 180px;
+            background-color: #e9ecef;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .gallery-item:hover .remove-btn {
+            opacity: 1;
+        }
+        .add-photo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            height: 180px;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+        .add-photo-item:hover {
+            border-color: #2563eb;
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        .add-photo-item i {
+            font-size: 2rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        #galleryInput {
+            display: none;
+        }
+        .gallery-modal-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.svg" alt="منصة الحرفيين" height="40">
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="#" id="dashboardLink" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-speedometer2"></i> لوحة التحكم
+                </a>
+                <button class="btn btn-outline-danger" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container mt-4">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">معلومات الحساب</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="profile-picture-container">
+                            <img id="profilePicture" src="https://via.placeholder.com/150x150.png?text=User+Profile" alt="الصورة الشخصية" class="profile-picture">
+                            <label for="profilePictureInput" class="upload-icon">
+                                <i class="bi bi-camera"></i>
+                            </label>
+                            <input type="file" id="profilePictureInput" accept="image/*">
+                        </div>
+                        <h5 id="userName" class="mb-1"></h5>
+                        <p id="userRole" class="text-muted"></p>
+                        <p id="userStatus" class="status-badge mt-2 d-inline-block">نشط</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">تعديل الملف الشخصي</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="row form-section">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">الاسم الكامل</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">رقم الهاتف</label>
+                                    <input type="tel" class="form-control" id="phone" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <label for="email" class="form-label">البريد الإلكتروني</label>
+                                <input type="email" class="form-control" id="email" readonly>
+                                <small class="text-muted">لا يمكن تغيير البريد الإلكتروني</small>
+                            </div>
+                            
+                            <div id="workerFields" class="form-section">
+                                <h6 class="mb-3">معلومات العمل</h6>
+                                <div class="mb-3">
+                                    <label for="profession" class="form-label">المهنة</label>
+                                    <select class="form-select" id="profession">
+                                        <option value="نجار">نجار</option>
+                                        <option value="سباك">سباك</option>
+                                        <option value="كهربائي">كهربائي</option>
+                                        <option value="بناء">بناء</option>
+                                        <option value="دهان">دهان</option>
+                                        <option value="حداد">حداد</option>
+                                        <option value="ميكانيكي">ميكانيكي</option>
+                                        <option value="فني تكييف">فني تكييف</option>
+                                        <option value="فني أجهزة منزلية">فني أجهزة منزلية</option>
+                                        <option value="مبلط">مبلط</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">الموقع / المدينة</label>
+                                    <select class="form-select" id="location">
+                                        <option value="القاهرة">القاهرة</option>
+                                        <option value="الإسكندرية">الإسكندرية</option>
+                                        <option value="الجيزة">الجيزة</option>
+                                        <option value="بورسعيد">بورسعيد</option>
+                                        <option value="السويس">السويس</option>
+                                        <option value="المنصورة">المنصورة</option>
+                                        <option value="طنطا">طنطا</option>
+                                        <option value="الزقازيق">الزقازيق</option>
+                                        <option value="أسيوط">أسيوط</option>
+                                        <option value="الإسماعيلية">الإسماعيلية</option>
+                                        <option value="الأقصر">الأقصر</option>
+                                        <option value="أسوان">أسوان</option>
+                                        <option value="شرم الشيخ">شرم الشيخ</option>
+                                        <option value="المنيا">المنيا</option>
+                                        <option value="دمياط">دمياط</option>
+                                        <option value="بني سويف">بني سويف</option>
+                                        <option value="أخرى">أخرى</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">وصف مختصر عن عملك</label>
+                                    <textarea class="form-control" id="description" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">سعر الخدمة الأساسي (ج.م)</label>
+                                    <input type="number" class="form-control" id="price" min="100">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">أنواع الخدمات التي تقدمها</label>
+                                    <div id="serviceTypesContainer" class="mb-2">
+                                        <!-- سيتم إضافة قائمة أنواع الخدمات ديناميكياً -->
+                                    </div>
+                                    <small class="text-muted">سيتم عرض هذه الخدمات للعملاء عند حجز خدمة معك</small>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-save"></i> حفظ التغييرات
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- معرض الأعمال (يظهر فقط للحرفيين) -->
+                <div id="gallerySection" class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">معرض الأعمال</h5>
+                        <span class="text-muted fs-6">أضف صور لأعمالك السابقة</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="gallery-container" id="workGallery">
+                            <!-- هنا سيتم عرض الصور -->
+                        </div>
+                        <input type="file" id="galleryInput" accept="image/*" multiple style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- رسالة النجاح -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">تم حفظ التغييرات بنجاح!</h4>
+                    <p class="text-muted">تم تحديث معلومات الملف الشخصي الخاص بك بنجاح.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">حسنًا</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من تسجيل الدخول
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // تحديد رابط لوحة التحكم المناسب
+            const dashboardLink = document.getElementById('dashboardLink');
+            if (currentUser.role === 'worker') {
+                dashboardLink.href = 'worker-dashboard.html';
+            } else {
+                dashboardLink.href = 'dashboard.html';
+            }
+
+            // ملء بيانات المستخدم
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role === 'worker' ? 'حرفي' : 'عميل';
+            document.getElementById('name').value = currentUser.name;
+            document.getElementById('phone').value = currentUser.phone;
+            document.getElementById('email').value = currentUser.email;
+
+            // التحقق من وجود صورة شخصية
+            if (currentUser.profileImage) {
+                document.getElementById('profilePicture').src = currentUser.profileImage;
+            }
+            
+            // إظهار/إخفاء حقول الحرفي
+            if (currentUser.role === 'worker') {
+                document.getElementById('workerFields').style.display = 'block';
+                if (currentUser.profession) {
+                    document.getElementById('profession').value = currentUser.profession;
+                    // عرض قائمة أنواع الخدمات حسب المهنة
+                    updateServiceTypeOptions(currentUser.profession, currentUser.services || []);
+                }
+                // ملء بيانات الموقع إذا كانت متوفرة
+                if (currentUser.location) {
+                    document.getElementById('location').value = currentUser.location;
+                }
+                if (currentUser.description) {
+                    document.getElementById('description').value = currentUser.description;
+                }
+                if (currentUser.price) {
+                    document.getElementById('price').value = currentUser.price;
+                }
+            } else {
+                document.getElementById('workerFields').style.display = 'none';
+            }
+            
+            // تغيير أنواع الخدمات عند تغيير المهنة
+            document.getElementById('profession').addEventListener('change', function(e) {
+                const profession = e.target.value;
+                updateServiceTypeOptions(profession, []);
+            });
+
+            // معالجة تغيير الصورة الشخصية
+            document.getElementById('profilePictureInput').addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profilePicture').src = e.target.result;
+                        // تخزين الصورة مؤقتاً للحفظ مع بيانات المستخدم
+                        window.profileImageToSave = e.target.result;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            // إدارة معرض الأعمال (للحرفيين فقط)
+            handleGalleryManagement();
+            
+            // معالجة نموذج الملف الشخصي
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                
+                // التحقق من صحة البيانات
+                if (!name || !phone) {
+                    alert('الرجاء ملء جميع الحقول المطلوبة');
+                    return;
+                }
+                
+                let userData = {
+                    name: name,
+                    phone: phone
+                };
+                
+                // إضافة بيانات الحرفي إذا كان المستخدم حرفي
+                if (currentUser.role === 'worker') {
+                    const profession = document.getElementById('profession').value;
+                    const location = document.getElementById('location').value;
+                    const description = document.getElementById('description').value.trim();
+                    const price = parseInt(document.getElementById('price').value);
+                    
+                    // جمع الخدمات المحددة
+                    const serviceCheckboxes = document.querySelectorAll('.service-checkbox:checked');
+                    const services = Array.from(serviceCheckboxes).map(checkbox => checkbox.value);
+                    
+                    if (!profession || price < 100) {
+                        alert('الرجاء إدخال معلومات العمل بشكل صحيح');
+                        return;
+                    }
+                    
+                    if (services.length === 0) {
+                        alert('الرجاء تحديد خدمة واحدة على الأقل');
+                        return;
+                    }
+                    
+                    userData.profession = profession;
+                    userData.location = location;
+                    userData.description = description;
+                    userData.price = price;
+                    userData.services = services;
+                }
+                
+                // تحديث بيانات المستخدم
+                updateUserData(userData);
+                
+                // عرض رسالة النجاح
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+            });
+        });
+
+        // إدارة معرض الأعمال (للحرفيين فقط)
+        function handleGalleryManagement() {
+            // الحصول على بيانات المستخدم الحالي من التخزين المحلي
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (currentUser.role !== 'worker') {
+                document.getElementById('gallerySection').style.display = 'none';
+                return;
+            }
+            
+            // التأكد من وجود مصفوفة المعرض
+            if (!currentUser.gallery) {
+                currentUser.gallery = [];
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            // عرض الصور الحالية
+            renderGallery();
+            
+            // معالجة رفع الصور
+            const galleryInput = document.getElementById('galleryInput');
+            
+            // إضافة مستمع للزر المخفي
+            galleryInput.addEventListener('change', function() {
+                console.log('تم اختيار الملفات:', galleryInput.files);
+                
+                if (galleryInput.files && galleryInput.files.length > 0) {
+                    const maxImages = 6;
+                    const remainingSlots = maxImages - (currentUser.gallery ? currentUser.gallery.length : 0);
+                    
+                    if (remainingSlots <= 0) {
+                        alert('لقد وصلت إلى الحد الأقصى من الصور (6 صور)');
+                        return;
+                    }
+                    
+                    const filesToProcess = Math.min(galleryInput.files.length, remainingSlots);
+                    alert(`جاري معالجة ${filesToProcess} صور...`);
+                    
+                    let processedImages = 0;
+                    
+                    // إنشاء مصفوفة المعرض إذا لم تكن موجودة
+                    if (!currentUser.gallery) {
+                        currentUser.gallery = [];
+                    }
+                    
+                    for (let i = 0; i < filesToProcess; i++) {
+                        const file = galleryInput.files[i];
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            // إضافة الصورة إلى المصفوفة
+                            const updatedUser = JSON.parse(localStorage.getItem('currentUser')); // الحصول على أحدث البيانات
+                            if (!updatedUser.gallery) {
+                                updatedUser.gallery = [];
+                            }
+                            
+                            updatedUser.gallery.push(e.target.result);
+                            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                            
+                            processedImages++;
+                            
+                            // إذا تم معالجة جميع الصور، تحديث العرض
+                            if (processedImages === filesToProcess) {
+                                renderGallery();
+                                alert('تمت إضافة الصور بنجاح');
+                            }
+                        };
+                        
+                        reader.onerror = function() {
+                            alert('حدث خطأ أثناء قراءة الملف');
+                            processedImages++;
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+        }
+        
+        function renderGallery() {
+            // الحصول على بيانات المستخدم الحالي
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const galleryContainer = document.getElementById('workGallery');
+            galleryContainer.innerHTML = '';
+            
+            // إضافة تنسيق شبكي للمعرض
+            galleryContainer.className = 'row mb-3';
+            
+            if (!currentUser.gallery || currentUser.gallery.length === 0) {
+                const emptyCol = document.createElement('div');
+                emptyCol.className = 'col-12 text-center';
+                
+                const emptyMsg = document.createElement('p');
+                emptyMsg.className = 'text-muted mb-4';
+                emptyMsg.textContent = 'لا توجد صور في معرض أعمالك. قم بإضافة صور لعرض أعمالك.';
+                
+                // إضافة زر إضافة صورة عندما لا توجد صور
+                const addPhotoLabel = document.createElement('label');
+                addPhotoLabel.htmlFor = 'galleryInput';
+                addPhotoLabel.className = 'btn btn-outline-primary';
+                addPhotoLabel.innerHTML = '<i class="bi bi-plus-circle me-2"></i>إضافة صورة';
+                
+                emptyCol.appendChild(emptyMsg);
+                emptyCol.appendChild(addPhotoLabel);
+                galleryContainer.appendChild(emptyCol);
+                return;
+            }
+            
+            currentUser.gallery.forEach((image, index) => {
+                const imgCol = document.createElement('div');
+                imgCol.className = 'col-md-4 col-sm-6 mb-3';
+                
+                const imgCard = document.createElement('div');
+                imgCard.className = 'card h-100';
+                
+                const img = document.createElement('img');
+                img.src = image;
+                img.className = 'card-img-top gallery-img';
+                img.alt = `صورة معرض ${index + 1}`;
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body text-center';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-sm btn-danger';
+                deleteBtn.textContent = 'حذف';
+                deleteBtn.onclick = function() {
+                    deleteGalleryImage(index);
+                };
+                
+                cardBody.appendChild(deleteBtn);
+                imgCard.appendChild(img);
+                imgCard.appendChild(cardBody);
+                imgCol.appendChild(imgCard);
+                galleryContainer.appendChild(imgCol);
+            });
+            
+            // إضافة زر إضافة صورة في نهاية المعرض
+            const addBtnContainer = document.createElement('div');
+            addBtnContainer.className = 'col-12 text-center mt-3';
+            
+            const addPhotoLabel = document.createElement('label');
+            addPhotoLabel.htmlFor = 'galleryInput';
+            addPhotoLabel.className = 'btn btn-outline-primary';
+            addPhotoLabel.innerHTML = '<i class="bi bi-plus-circle me-2"></i>إضافة صورة جديدة';
+            
+            addBtnContainer.appendChild(addPhotoLabel);
+            
+            // إضافة في الأسفل بعد المعرض
+            document.querySelector('#gallerySection .card-body').appendChild(addBtnContainer);
+        }
+        
+        function deleteGalleryImage(index) {
+            // الحصول على بيانات المستخدم الحالي
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
+                currentUser.gallery.splice(index, 1);
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                renderGallery();
+            }
+        }
+        
+        function updateUserData(newData) {
+            // الحصول على بيانات المستخدم الحالي
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            // الحفاظ على البيانات الأساسية للمستخدم
+            const updatedUser = {
+                ...currentUser,
+                ...newData
+            };
+            
+            // إضافة الصورة الشخصية إذا تم تغييرها
+            if (window.profileImageToSave) {
+                updatedUser.profileImage = window.profileImageToSave;
+                window.profileImageToSave = null; // مسح المتغير المؤقت
+            }
+            
+            // الحفاظ على معرض الصور إذا كان موجودًا
+            if (currentUser.gallery) {
+                updatedUser.gallery = currentUser.gallery;
+            }
+            
+            // تحديث البيانات في التخزين المحلي
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+            localStorage.setItem('users', JSON.stringify(
+                JSON.parse(localStorage.getItem('users') || '[]').map(user => 
+                    user.id === updatedUser.id ? updatedUser : user
+                )
+            ));
+            
+            alert('تم تحديث بياناتك بنجاح');
+        }
+
+        // تحديث أنواع الخدمات حسب المهنة
+        function updateServiceTypeOptions(profession, selectedServices) {
+            const serviceTypesContainer = document.getElementById('serviceTypesContainer');
+            serviceTypesContainer.innerHTML = '';
+            
+            // تعريف قائمة الخدمات حسب المهنة
+            const servicesByProfession = {
+                'نجار': ['تركيب أثاث', 'صيانة أثاث', 'صناعة أثاث حسب الطلب', 'تركيب أبواب ونوافذ', 'تركيب أرضيات خشبية', 'إصلاح أضرار الخشب'],
+                'سباك': ['إصلاح تسربات', 'تركيب حنفيات وخلاطات', 'تركيب أدوات صحية', 'صيانة شبكات المياه', 'إصلاح مضخات المياه', 'تركيب سخانات المياه'],
+                'كهربائي': ['تركيب إنارة', 'صيانة دوائر كهربائية', 'تركيب مفاتيح وبرايز', 'إصلاح أعطال كهربائية', 'تركيب أنظمة أمان', 'توصيل وصيانة أجهزة كهربائية'],
+                'بناء': ['بناء جدران', 'ترميم وإصلاح', 'أعمال اللياسة والطينة', 'تركيب أحجار ديكور', 'تشطيبات داخلية', 'تبليط'],
+                'دهان': ['دهان داخلي', 'دهان خارجي', 'دهان أثاث', 'ورق جدران', 'دهان ديكوري', 'إزالة دهان قديم'],
+                'حداد': ['تصنيع أبواب حديد', 'تصنيع نوافذ حديد', 'تصنيع هياكل معدنية', 'تصنيع درابزين وسلالم', 'إصلاح وصيانة أعمال حديد', 'تركيب حماية للنوافذ والشرفات'],
+                'ميكانيكي': ['صيانة محركات', 'إصلاح أنظمة التبريد', 'إصلاح فرامل', 'تغيير زيت ومرشحات', 'إصلاح أنظمة التعليق', 'تشخيص أعطال إلكترونية'],
+                'فني تكييف': ['تركيب مكيفات', 'صيانة مكيفات', 'إصلاح أعطال التبريد', 'تعبئة غاز التبريد', 'تنظيف وحدات التكييف', 'تركيب قطع غيار'],
+                'فني أجهزة منزلية': ['إصلاح غسالات', 'إصلاح ثلاجات', 'إصلاح أفران', 'إصلاح مكيفات', 'إصلاح سخانات', 'إصلاح أجهزة صغيرة'],
+                'مبلط': ['تركيب بلاط', 'تركيب سيراميك', 'تركيب رخام', 'تركيب جرانيت', 'تجديد فواصل البلاط', 'إزالة بلاط قديم']
+            };
+            
+            // الخدمات الافتراضية إذا لم تكن المهنة في القائمة
+            const defaultServices = ['تركيب', 'صيانة', 'إصلاح', 'استشارة'];
+            
+            // تحديد الخدمات المناسبة
+            const services = servicesByProfession[profession] || defaultServices;
+            
+            // إنشاء مربعات اختيار للخدمات
+            services.forEach(service => {
+                const isChecked = selectedServices.includes(service);
+                
+                const div = document.createElement('div');
+                div.className = 'form-check';
+                
+                const input = document.createElement('input');
+                input.className = 'form-check-input service-checkbox';
+                input.type = 'checkbox';
+                input.id = `service-${service}`;
+                input.name = 'services[]';
+                input.value = service;
+                input.checked = isChecked;
+                
+                const label = document.createElement('label');
+                label.className = 'form-check-label';
+                label.htmlFor = `service-${service}`;
+                label.textContent = service;
+                
+                div.appendChild(input);
+                div.appendChild(label);
+                serviceTypesContainer.appendChild(div);
+            });
+        }
+
+        // تسجيل الخروج
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html> 

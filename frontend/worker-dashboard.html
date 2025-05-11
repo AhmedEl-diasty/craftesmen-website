@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم الحرفي | منصة الحرفيين</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    }
+    .dashboard-card {
+      border-radius: 10px;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .booking-item {
+      border-radius: 8px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    .booking-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .nav-pills .nav-link.active {
+      background-color: #0d6efd;
+    }
+    .profile-header {
+      background: linear-gradient(135deg, #0d6efd, #0098d4);
+      color: white;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .status-badge {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+    .booking-date {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+    /* أنماط نظام المحادثات */
+    .chat-button {
+      margin-top: 10px;
+      display: block;
+      text-align: center;
+    }
+    .chat-container {
+      max-height: 500px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      margin-top: 1rem;
+      display: none;
+    }
+    .chat-header {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-bottom: 1px solid #dee2e6;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-header span {
+      font-weight: 600;
+      color: #1c1e21;
+    }
+    .chat-messages {
+      height: 350px;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: #ffffff;
+    }
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    .chat-input {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #dee2e6;
+      border-radius: 20px;
+      font-size: 14px;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+      transition: all 0.2s ease;
+    }
+    .chat-input input:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    .chat-input button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 20px;
+      font-size: 14px;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+      background-color: #0d6efd;
+      border: none;
+      color: white;
+      transition: all 0.2s ease;
+    }
+    .chat-input button:hover {
+      background-color: #0b5ed7;
+    }
+    .chat-message {
+      margin-bottom: 1rem;
+      max-width: 80%;
+      clear: both;
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-message.worker-message {
+      margin-left: auto;
+      align-items: flex-end;
+    }
+    .chat-message.client-message {
+      margin-right: auto;
+      align-items: flex-start;
+    }
+    .message-content {
+      padding: 0.75rem 1rem;
+      border-radius: 15px;
+      word-wrap: break-word;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.3px;
+      max-width: 100%;
+      position: relative;
+    }
+    .worker-message .message-content {
+      background-color: #0d6efd;
+      color: white;
+      border-bottom-right-radius: 5px;
+    }
+    .client-message .message-content {
+      background-color: #f0f2f5;
+      color: #1c1e21;
+      border-bottom-left-radius: 5px;
+    }
+    .message-meta {
+      font-size: 12px;
+      margin-top: 0.25rem;
+      color: #65676b;
+      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    }
+    .chat-header .btn-light {
+      padding: 2px 6px;
+      font-size: 20px;
+      line-height: 1;
+      border: none;
+      background: transparent;
+    }
+    .chat-header .btn-light:hover {
+      background-color: #e9ecef;
+      border-radius: 50%;
+    }
+    /* أنماط نظام الإشعارات */
+    .notification-item {
+      padding: 10px 15px;
+      border-bottom: 1px solid #f1f1f1;
+      transition: all 0.2s ease;
+    }
+    .notification-item:hover {
+      background-color: #f8f9fa;
+    }
+    .notification-item.unread {
+      background-color: #e8f4ff;
+    }
+    .notification-item .notification-title {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .notification-item .notification-time {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+    .notification-content {
+      font-size: 0.85rem;
+      color: #212529;
+      margin-bottom: 2px;
+    }
+    .dropdown-menu {
+      z-index: 1030;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.svg" alt="منصة الحرفيين" height="40" style="filter: brightness(0) invert(1);">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="worker-dashboard.html">لوحة التحكم</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="profile.html">الملف الشخصي</a>
+          </li>
+        </ul>
+        <!-- إضافة زر الإشعارات -->
+        <div class="dropdown me-2 position-relative">
+          <button class="btn btn-light position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell"></i>
+            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+              0
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li>
+              <h6 class="dropdown-header">الإشعارات</h6>
+            </li>
+            <div id="notificationsList">
+              <li><span class="dropdown-item text-center text-muted">لا توجد إشعارات جديدة</span></li>
+            </div>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item text-center" onclick="markAllRead()">تعيين الكل كمقروء</button></li>
+          </ul>
+        </div>
+        <button class="btn btn-outline-light" id="logoutBtn">تسجيل الخروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="container py-5">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 mb-4">
+        <div class="card dashboard-card">
+      <div class="card-body">
+            <div class="text-center mb-3">
+              <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y3JhZnRzbWFufHx8fHx8MTcwOTg0NjQwMA&ixlib=rb-4.0.3&q=80&w=150" class="rounded-circle mb-3" width="100" height="100" alt="صورة الحرفي">
+              <h5 class="card-title" id="workerName">اسم الحرفي</h5>
+              <p class="card-text text-muted" id="workerProfession">المهنة</p>
+            </div>
+            <div class="list-group list-group-flush">
+              <a href="#bookings" class="list-group-item list-group-item-action active">الحجوزات</a>
+              <a href="#summary" class="list-group-item list-group-item-action">ملخص الحساب</a>
+              <a href="profile.html" class="list-group-item list-group-item-action">تعديل الملف الشخصي</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card dashboard-card mt-4">
+          <div class="card-body">
+            <h5 class="card-title">إحصائيات سريعة</h5>
+            <div class="d-flex justify-content-between mb-2">
+              <span>الحجوزات الجديدة:</span>
+              <span class="badge bg-primary rounded-pill" id="newBookingsCount">0</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>الحجوزات المكتملة:</span>
+              <span class="badge bg-success rounded-pill" id="completedBookingsCount">0</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>التقييم:</span>
+              <span id="workerRating">4.8 <i class="bi bi-star-fill text-warning"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- قسم معرض الأعمال المصغر -->
+        <div class="card dashboard-card mt-4">
+          <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">معرض أعمالي</h5>
+              <a href="profile.html#gallerySection" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i> تعديل
+              </a>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="miniGallery" class="row g-2">
+              <!-- سيتم عرض معرض مصغر هنا -->
+              <p class="text-muted text-center" id="noGalleryMessage">لم تقم بإضافة صور بعد</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content area -->
+      <div class="col-lg-9">
+        <!-- Profile overview -->
+        <div class="profile-header mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4>مرحباً، <span id="welcomeName">اسم الحرفي</span>!</h4>
+              <p class="mb-0">هذه لوحة التحكم الخاصة بك. يمكنك هنا متابعة حجوزاتك وإدارة حسابك.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#updateStatusModal">
+                تحديث حالة الحجوزات
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bookings section -->
+        <div class="card dashboard-card mb-4" id="bookings">
+          <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">الحجوزات</h5>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" data-filter="all">الكل</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="pending">قيد الانتظار</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="confirmed">مؤكد</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="completed">مكتمل</button>
+                <button type="button" class="btn btn-outline-primary" data-filter="cancelled">ملغي</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="bookingsList" class="booking-list">
+              <!-- Bookings will be added here dynamically -->
+              <div class="text-center py-5 text-muted" id="noBookingsMessage">
+                <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
+                <p class="mt-3">لا توجد حجوزات حالياً</p>
+        </div>
+      </div>
+    </div>
+
+        <!-- Account summary -->
+        <div class="card dashboard-card" id="summary">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">ملخص الحساب</h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-md-4">
+                <div class="card text-center bg-light h-100">
+                  <div class="card-body">
+                    <i class="bi bi-calendar-check text-primary" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3" id="totalBookings">0</h5>
+                    <p class="text-muted">إجمالي الحجوزات</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-center bg-light h-100">
+                  <div class="card-body">
+                    <i class="bi bi-currency-dollar text-success" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3" id="totalEarnings">0 ج.م</h5>
+                    <p class="text-muted">إجمالي الأرباح</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-center bg-light h-100">
+      <div class="card-body">
+                    <i class="bi bi-people text-info" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3" id="totalClients">0</h5>
+                    <p class="text-muted">إجمالي العملاء</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Update Status Modal -->
+  <div class="modal fade" id="updateStatusModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">تحديث حالة الحجز</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="updateStatusForm">
+            <div class="mb-3">
+              <label for="bookingSelect" class="form-label">اختر الحجز</label>
+              <select class="form-select" id="bookingSelect" required>
+                <option value="">-- اختر الحجز --</option>
+                <!-- Options will be added dynamically -->
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="statusSelect" class="form-label">الحالة الجديدة</label>
+              <select class="form-select" id="statusSelect" required>
+                <option value="">-- اختر الحالة --</option>
+                <option value="تم التأكيد">مؤكد</option>
+                <option value="مكتمل">مكتمل</option>
+                <option value="ملغي">ملغي</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+          <button type="button" class="btn btn-primary" id="saveStatusBtn">حفظ التغييرات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // التحقق من تسجيل الدخول وأن المستخدم حرفي
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        console.log('لم يتم العثور على بيانات المستخدم');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (currentUser.role !== 'worker') {
+        console.log('المستخدم ليس حرفياً');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      console.log('تم تسجيل الدخول بنجاح:', currentUser);
+
+      // تهيئة مصفوفات الإشعارات والمحادثات والرسائل إذا لم تكن موجودة
+      if (!localStorage.getItem('notifications')) {
+        localStorage.setItem('notifications', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('chats')) {
+        localStorage.setItem('chats', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('messages')) {
+        localStorage.setItem('messages', JSON.stringify([]));
+      }
+
+      // عرض معلومات الحرفي
+      document.getElementById('workerName').textContent = currentUser.name;
+      document.getElementById('welcomeName').textContent = currentUser.name;
+      document.getElementById('workerProfession').textContent = currentUser.profession || 'حرفي';
+      
+      // عرض صورة الملف الشخصي إذا كانت متوفرة
+      if (currentUser.profileImage) {
+        document.querySelector('.rounded-circle').src = currentUser.profileImage;
+      }
+      
+      // تحميل الحجوزات والإشعارات
+      loadBookings();
+      loadNotifications();
+      
+      // فحص الإشعارات فوراً
+      checkNewNotifications();
+      
+      // فحص الإشعارات كل 5 ثوانٍ
+      setInterval(checkNewNotifications, 5000);
+      
+      // فحص الإشعارات عند استعادة النافذة من الخلفية
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          checkNewNotifications();
+        }
+      });
+
+      // إضافة مستمع حدث لزر تسجيل الخروج
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        console.log('تسجيل الخروج...');
+        localStorage.removeItem('currentUser');
+        window.location.href = 'login.html';
+      });
+    });
+    
+    function loadBookings() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) return;
+
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      
+      // تصفية الحجوزات الخاصة بالحرفي الحالي
+      const workerBookings = bookings.filter(booking => booking.workerId === currentUser.id);
+      
+      const bookingsList = document.getElementById('bookingsList');
+      const noBookingsMessage = document.getElementById('noBookingsMessage');
+      const bookingSelect = document.getElementById('bookingSelect');
+      
+      // تحديث العدادات
+      let newCount = 0;
+      let completedCount = 0;
+      let totalEarnings = 0;
+      const uniqueClients = new Set();
+      
+      if (workerBookings.length > 0) {
+        bookingsList.innerHTML = '';
+        noBookingsMessage.style.display = 'none';
+        bookingSelect.innerHTML = '<option value="">-- اختر الحجز --</option>';
+        
+        workerBookings.forEach(booking => {
+          // إضافة إلى العدادات
+          if (booking.status === 'pending') newCount++;
+          if (booking.status === 'completed') {
+            completedCount++;
+            totalEarnings += parseInt(booking.price || 0);
+          }
+          uniqueClients.add(booking.clientId);
+          
+          // تهيئة محادثة إذا كان الحجز مؤكد
+          const bookingStatus = booking.status || 'pending';
+          const hasChat = bookingStatus === 'تم التأكيد' || bookingStatus === 'confirmed' || bookingStatus === 'pending' || bookingStatus === 'معلق';
+          
+          if (hasChat) {
+            initChat(booking.id, currentUser.id, booking.clientId, booking.clientName);
+          }
+          
+          // إنشاء عنصر الحجز
+          const bookingItem = document.createElement('div');
+          bookingItem.className = `booking-item p-3 border mb-3 ${booking.status}`;
+          bookingItem.innerHTML = `
+            <div class="row">
+              <div class="col-md-8">
+                <div class="d-flex align-items-center mb-2">
+                  <h6 class="mb-0 me-2">${booking.clientName}</h6>
+                  <span class="status-badge badge ${getStatusBadgeClass(booking.status)}">${getStatusText(booking.status)}</span>
+                </div>
+                <p class="mb-1"><strong>نوع الخدمة:</strong> ${booking.serviceType}</p>
+                <p class="mb-1"><strong>التاريخ:</strong> ${new Date(booking.date).toLocaleDateString('ar-EG')}</p>
+                <p class="mb-1"><strong>الوقت:</strong> ${booking.time}</p>
+                <p class="mb-1"><strong>العنوان:</strong> ${booking.address}</p>
+                <p class="mb-0"><strong>السعر:</strong> ${booking.price} ج.م</p>
+                <p class="booking-date mt-2">تم الحجز في: ${new Date(booking.bookingDate).toLocaleDateString('ar-EG')}</p>
+              </div>
+              <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-column justify-content-between">
+                <div>
+                  <span class="d-block mb-2"><i class="bi bi-telephone me-1"></i>${booking.clientPhone || 'غير متاح'}</span>
+                </div>
+                <div class="mt-auto">
+                  <button class="btn btn-sm btn-outline-primary me-1" data-booking-id="${booking.id}" data-bs-toggle="modal" data-bs-target="#updateStatusModal">تحديث الحالة</button>
+                  ${booking.status !== 'ملغي' && booking.status !== 'cancelled' ? `
+                  <button class="btn btn-sm btn-outline-success mt-2 chat-button" onclick="toggleChat('chat-${booking.id}')">
+                    <i class="bi bi-chat-dots"></i> محادثة العميل
+                  </button>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+            ${hasChat ? `
+            <div id="chat-${booking.id}" class="chat-container mt-3">
+              <div class="chat-header">
+                <span>محادثة مع ${booking.clientName}</span>
+                <button class="btn btn-sm btn-light" onclick="toggleChat('chat-${booking.id}')">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+              <div id="messages-${booking.id}" class="chat-messages">
+                <!-- سيتم عرض الرسائل هنا -->
+              </div>
+              <div class="chat-input">
+                <input type="text" id="message-input-${booking.id}" placeholder="اكتب رسالتك هنا..." onkeypress="handleChatKeyPress(event, '${booking.id}', '${booking.clientId}')">
+                <button class="btn btn-primary" onclick="sendMessage('${booking.id}', '${booking.clientId}')">
+                  <i class="bi bi-send"></i>
+                </button>
+              </div>
+            </div>
+            ` : ''}
+          `;
+          bookingsList.appendChild(bookingItem);
+          
+          // إضافة للقائمة المنسدلة في النموذج
+          const option = document.createElement('option');
+          option.value = booking.id;
+          option.textContent = `${booking.clientName} - ${new Date(booking.date).toLocaleDateString('ar-EG')} - ${booking.time}`;
+          bookingSelect.appendChild(option);
+        });
+        
+        // تحميل المحادثات
+        workerBookings.forEach(booking => {
+          const bookingStatus = booking.status || 'pending';
+          const hasChat = bookingStatus === 'تم التأكيد' || bookingStatus === 'confirmed' || bookingStatus === 'pending' || bookingStatus === 'معلق';
+          
+          if (true) {
+            loadMessages(booking.id);
+          }
+        });
+        
+        // إضافة مستمعات الأحداث لأزرار تحديث الحالة
+        document.querySelectorAll('[data-booking-id]').forEach(button => {
+          button.addEventListener('click', function() {
+            const bookingId = this.getAttribute('data-booking-id');
+            document.getElementById('bookingSelect').value = bookingId;
+          });
+        });
+      } else {
+        bookingsList.innerHTML = '';
+        noBookingsMessage.style.display = 'block';
+        bookingSelect.innerHTML = '<option value="">-- لا توجد حجوزات --</option>';
+      }
+      
+      // تحديث الإحصائيات
+      document.getElementById('newBookingsCount').textContent = newCount;
+      document.getElementById('completedBookingsCount').textContent = completedCount;
+      document.getElementById('totalBookings').textContent = workerBookings.length;
+      document.getElementById('totalEarnings').textContent = totalEarnings + ' ج.م';
+      document.getElementById('totalClients').textContent = uniqueClients.size;
+      
+      // استرجاع معلومات الحرفي من قاعدة البيانات لعرض التقييم
+      const workersData = getWorkersData();
+      const workerData = workersData.find(w => w.id === currentUser.id);
+      if (workerData) {
+        document.getElementById('workerRating').innerHTML = `${workerData.rating} <i class="bi bi-star-fill text-warning"></i>`;
+      }
+      
+      // عرض معرض الأعمال المصغر
+      displayMiniGallery();
+    }
+    
+    function filterBookings(filter) {
+      const bookingItems = document.querySelectorAll('.booking-item');
+      const statusMapping = {
+        'pending': ['pending', 'معلق'],
+        'confirmed': ['confirmed', 'تم التأكيد'],
+        'completed': ['completed', 'مكتمل'],
+        'cancelled': ['cancelled', 'ملغي']
+      };
+      
+      bookingItems.forEach(item => {
+        if (filter === 'all') {
+          item.style.display = 'block';
+        } else {
+          // تحقق مما إذا كانت فئة العنصر تتطابق مع أي من قيم الحالة المقابلة
+          const isMatch = statusMapping[filter]?.some(status => 
+            item.classList.contains(status)
+          );
+          item.style.display = isMatch ? 'block' : 'none';
+        }
+      });
+      
+      const noBookingsMessage = document.getElementById('noBookingsMessage');
+      const visibleItems = document.querySelectorAll('.booking-item[style="display: block;"]');
+      
+      if (visibleItems.length === 0) {
+        noBookingsMessage.style.display = 'block';
+        noBookingsMessage.innerHTML = `
+          <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
+          <p class="mt-3">لا توجد حجوزات ${getFilterText(filter)}</p>
+        `;
+      } else {
+        noBookingsMessage.style.display = 'none';
+      }
+    }
+    
+    function updateBookingStatus() {
+      const bookingId = document.getElementById('bookingSelect').value;
+      const newStatus = document.getElementById('statusSelect').value;
+      
+      if (!bookingId || !newStatus) {
+        alert('يرجى اختيار الحجز والحالة الجديدة');
+        return;
+      }
+      
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+      // التحقق من أن الحجز يخص الحرفي الحالي
+      const booking = bookings.find(b => b.id === bookingId);
+      if (!booking || booking.workerId !== currentUser.id) {
+        alert('لا يمكنك تحديث هذا الحجز');
+        return;
+      }
+      
+      // تحديث حالة الحجز
+      const updatedBookings = bookings.map(booking => {
+        if (booking.id === bookingId) {
+          // إضافة إشعار للعميل عند تغيير الحالة
+          const notification = {
+            id: 'notif_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+            userId: booking.clientId,
+            bookingId: booking.id,
+            title: `تم تحديث حالة الحجز`,
+            content: `تم تحديث حالة حجزك إلى: ${newStatus}`,
+            timestamp: new Date().toISOString(),
+            read: false,
+            type: 'status_update'
+          };
+          
+          // إضافة الإشعار إلى قائمة الإشعارات
+          const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+          notifications.push(notification);
+          localStorage.setItem('notifications', JSON.stringify(notifications));
+          
+          return {...booking, status: newStatus};
+        }
+        return booking;
+      });
+      
+      // حفظ التغييرات
+      localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+      
+      // إغلاق النافذة المنبثقة
+      const modal = bootstrap.Modal.getInstance(document.getElementById('updateStatusModal'));
+      modal.hide();
+      
+      // إعادة تحميل الحجوزات
+      loadBookings();
+      
+      // إظهار رسالة نجاح
+      alert('تم تحديث حالة الحجز بنجاح');
+    }
+    
+    // إضافة مستمع الحدث لزر حفظ التغييرات
+    document.getElementById('saveStatusBtn').addEventListener('click', updateBookingStatus);
+    
+    function getStatusBadgeClass(status) {
+      switch(status) {
+        case 'معلق':
+        case 'pending': 
+          return 'bg-warning text-dark';
+        case 'تم التأكيد':
+        case 'confirmed': 
+          return 'bg-info';
+        case 'مكتمل':
+        case 'completed': 
+          return 'bg-success';
+        case 'ملغي':
+        case 'cancelled': 
+          return 'bg-danger';
+        default: 
+          return 'bg-secondary';
+      }
+    }
+    
+    function getStatusText(status) {
+      switch(status) {
+        case 'pending':
+        case 'معلق': 
+          return 'قيد الانتظار';
+        case 'confirmed':
+        case 'تم التأكيد': 
+          return 'مؤكد';
+        case 'completed':
+        case 'مكتمل': 
+          return 'مكتمل';
+        case 'cancelled':
+        case 'ملغي': 
+          return 'ملغي';
+        default: 
+          return 'غير معروف';
+      }
+    }
+    
+    function getFilterText(filter) {
+      switch(filter) {
+        case 'pending': return 'قيد الانتظار';
+        case 'confirmed': return 'مؤكدة';
+        case 'completed': return 'مكتملة';
+        case 'cancelled': return 'ملغية';
+        default: return '';
+      }
+    }
+    
+    // استرجاع بيانات الحرفيين
+    function getWorkersData() {
+      // محاولة استرجاع البيانات من localStorage أولاً
+      const storedWorkers = localStorage.getItem('workers');
+      if (storedWorkers) {
+        return JSON.parse(storedWorkers);
+      }
+      
+      // في حالة عدم وجود بيانات في localStorage، استخدم بيانات من قاعدة البيانات الافتراضية
+      // (هذا الجزء سيتم استبداله بطلب لاحقًا للحصول على البيانات من الخادم)
+      const workersDatabase = {
+        "نجار": [
+          {id: "c1", name: "أحمد محمد", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y3JhZnRzbWFufHx8fHx8MTcwOTg0NjQwMA&ixlib=rb-4.0.3&q=80&w=400", rating: 4.8, reviews: 120, price: 500, description: "نجار محترف متخصص في تصميم وتصنيع الأثاث المنزلي بخبرة 15 عاماً. يتميز بدقة التنفيذ والالتزام بالمواعيد."},
+          // ... المزيد من النجارين
+        ],
+        "سباك": [
+          {id: "p1", name: "محمد علي", image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y3JhZnRzbWFufHx8fHx8MTcwOTg0NjQwMA&ixlib=rb-4.0.3&q=80&w=400", rating: 4.7, reviews: 95, price: 400, description: "سباك خبير في إصلاح تسريبات المياه وتركيب الأنظمة الصحية الحديثة. خبرة 10 سنوات في المجال."},
+          // ... المزيد من السباكين
+        ],
+        // ... المزيد من المهن
+      };
+      
+      // تحويل بيانات قاعدة البيانات إلى قائمة مسطحة
+      let allWorkers = [];
+      for (const profession in workersDatabase) {
+        workersDatabase[profession].forEach(worker => {
+          allWorkers.push({...worker, profession});
+        });
+      }
+      
+      return allWorkers;
+    }
+
+    // عرض معرض الأعمال المصغر
+    function displayMiniGallery() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      const miniGallery = document.getElementById('miniGallery');
+      const noGalleryMessage = document.getElementById('noGalleryMessage');
+      
+      // التحقق من وجود معرض صور
+      if (!currentUser.gallery || currentUser.gallery.length === 0) {
+        noGalleryMessage.style.display = 'block';
+        return;
+      }
+      
+      // إخفاء رسالة عدم وجود صور
+      noGalleryMessage.style.display = 'none';
+      
+      // عرض أحدث 6 صور فقط
+      const galleryImages = currentUser.gallery.slice(0, 6);
+      
+      // عرض الصور
+      galleryImages.forEach(imageData => {
+        const col = document.createElement('div');
+        col.className = 'col-4';
+        col.innerHTML = `
+          <div class="gallery-thumbnail" style="cursor: pointer;" data-img="${imageData}">
+            <img src="${imageData}" alt="صورة من معرض الأعمال" class="img-fluid rounded">
+          </div>
+        `;
+        miniGallery.appendChild(col);
+      });
+      
+      // إضافة وظيفة تكبير الصورة عند النقر عليها
+      document.querySelectorAll('.gallery-thumbnail').forEach(item => {
+        item.addEventListener('click', function() {
+          const imageSrc = this.getAttribute('data-img');
+          showGalleryImageInModal(imageSrc);
+        });
+      });
+    }
+    
+    // عرض صورة المعرض في نافذة منبثقة
+    function showGalleryImageInModal(src) {
+      // التحقق من وجود modal في الصفحة
+      if (!document.getElementById('galleryModal')) {
+        const modalHTML = `
+          <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">معرض الأعمال</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                  <img id="galleryModalImage" src="" alt="صورة العمل" style="max-width: 100%; max-height: 80vh;">
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+      }
+      
+      // تعيين مصدر الصورة وعرض النافذة المنبثقة
+      document.getElementById('galleryModalImage').src = src;
+      const galleryModal = new bootstrap.Modal(document.getElementById('galleryModal'));
+      galleryModal.show();
+    }
+
+    // وظائف نظام المحادثات
+
+    // تهيئة محادثة جديدة إذا لم تكن موجودة
+    function initChat(bookingId, workerId, clientId, clientName) {
+      const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+      const existingChat = chats.find(chat => chat.bookingId === bookingId);
+      
+      if (!existingChat) {
+        const newChat = {
+          id: 'chat_' + Date.now(),
+          bookingId: bookingId,
+          workerId: workerId,
+          clientId: clientId,
+          clientName: clientName,
+          createdAt: new Date().toISOString()
+        };
+        
+        chats.push(newChat);
+        localStorage.setItem('chats', JSON.stringify(chats));
+        
+        // إضافة رسالة ترحيبية
+        const welcomeMessage = {
+          id: 'msg_' + Date.now(),
+          chatId: newChat.id,
+          bookingId: bookingId,
+          sender: 'system',
+          content: `مرحباً! تم إنشاء محادثة بينك وبين ${clientName}. يمكنكما التواصل هنا حول تفاصيل الحجز.`,
+          timestamp: new Date().toISOString()
+        };
+        
+        const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+        messages.push(welcomeMessage);
+        localStorage.setItem('messages', JSON.stringify(messages));
+      }
+    }
+
+    // تبديل عرض المحادثة
+    function toggleChat(chatContainerId) {
+      const chatContainer = document.getElementById(chatContainerId);
+      if (chatContainer.style.display === 'block') {
+        chatContainer.style.display = 'none';
+      } else {
+        chatContainer.style.display = 'block';
+        const bookingId = chatContainerId.replace('chat-', '');
+        loadMessages(bookingId);
+        // تمرير إلى آخر الرسائل
+        const messagesContainer = document.getElementById(`messages-${bookingId}`);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    }
+
+    // تحميل رسائل المحادثة
+    function loadMessages(bookingId) {
+      const messagesContainer = document.getElementById(`messages-${bookingId}`);
+      if (!messagesContainer) return;
+      
+      const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+      const chat = chats.find(chat => chat.bookingId === bookingId);
+      
+      if (!chat) return;
+      
+      const allMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+      const chatMessages = allMessages.filter(msg => msg.bookingId === bookingId);
+      
+      // ترتيب الرسائل حسب الوقت
+      chatMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      
+      messagesContainer.innerHTML = '';
+      
+      chatMessages.forEach(message => {
+        const isWorkerMessage = message.sender === currentUser.id;
+        const isSystemMessage = message.sender === 'system';
+        
+        let messageHtml = '';
+        
+        if (isSystemMessage) {
+          messageHtml = `
+            <div class="text-center my-3">
+              <span class="badge bg-light text-dark">${message.content}</span>
+            </div>
+          `;
+        } else {
+          const messageTime = message.timestamp ? formatMessageTime(message.timestamp) : '';
+          messageHtml = `
+            <div class="chat-message ${isWorkerMessage ? 'worker-message' : 'client-message'}">
+              <div class="message-content">
+                ${message.content}
+              </div>
+              <div class="message-meta">
+                ${messageTime ? `<small class="text-muted">${messageTime}</small>` : ''}
+                <small class="text-muted ms-2">${isWorkerMessage ? 'أنت' : chat.clientName}</small>
+              </div>
+            </div>
+          `;
+        }
+        
+        messagesContainer.innerHTML += messageHtml;
+      });
+      
+      // تمرير إلى آخر الرسائل
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // معالجة ضغط Enter في مربع الإدخال
+    function handleChatKeyPress(event, bookingId, clientId) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage(bookingId, clientId);
+      }
+    }
+
+    // إرسال رسالة جديدة
+    function sendMessage(bookingId, clientId) {
+      const messageInput = document.getElementById(`message-input-${bookingId}`);
+      const messageContent = messageInput.value.trim();
+      
+      if (!messageContent) return;
+      
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) return;
+      
+      const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      const booking = bookings.find(b => b.id === bookingId);
+      if (!booking) return;
+      
+      // إنشاء رسالة جديدة
+      const newMessage = {
+        id: 'msg_' + Date.now(),
+        bookingId: bookingId,
+        sender: currentUser.id,
+        senderName: currentUser.name,
+        receiver: clientId,
+        content: messageContent,
+        timestamp: new Date().toISOString(),
+        read: false
+      };
+      
+      // حفظ الرسالة
+      const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+      messages.push(newMessage);
+      localStorage.setItem('messages', JSON.stringify(messages));
+      
+      // إنشاء إشعار للمستلم
+      createNotification({
+        recipientId: clientId,
+        senderId: currentUser.id,
+        senderName: currentUser.name,
+        bookingId: bookingId,
+        messageId: newMessage.id,
+        content: messageContent,
+        type: 'new_message'
+      });
+      
+      // مسح مربع الإدخال وتحديث عرض الرسائل
+      messageInput.value = '';
+      loadMessages(bookingId);
+    }
+
+    // وظيفة إنشاء إشعار جديد
+    function createNotification(params) {
+      const {
+        recipientId,
+        senderId,
+        senderName,
+        bookingId,
+        messageId,
+        content,
+        type
+      } = params;
+
+      console.log('إنشاء إشعار جديد:', params);
+
+      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+      
+      // إنشاء الإشعار
+      const notification = {
+        id: 'notif_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        userId: recipientId,
+        senderId: senderId,
+        senderName: senderName,
+        bookingId: bookingId,
+        messageId: messageId,
+        title: `رسالة جديدة من ${senderName}`,
+        content: content.length > 50 ? content.substring(0, 50) + '...' : content,
+        timestamp: new Date().toISOString(),
+        read: false,
+        type: type
+      };
+
+      // إضافة الإشعار للقائمة
+      notifications.push(notification);
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+      
+      console.log('تم إنشاء الإشعار:', notification);
+      
+      // تحديث عرض الإشعارات للمستخدم الحالي إذا كان هو المستلم
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (currentUser && currentUser.id === recipientId) {
+        loadNotifications();
+        playNotificationSound();
+      }
+    }
+
+    // تحديث وظيفة تحميل الإشعارات
+    function loadNotifications() {
+      console.log('جاري تحميل الإشعارات...');
+      
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        console.log('لم يتم العثور على بيانات المستخدم');
+        return;
+      }
+      
+      const notificationsList = document.getElementById('notificationsList');
+      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]')
+        .filter(notification => notification.userId === currentUser.id)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      console.log('إشعارات المستخدم الحالي:', notifications);
+      
+      // تحديث شارة الإشعارات
+      const unreadCount = notifications.filter(n => !n.read).length;
+      const notificationBadge = document.getElementById('notificationBadge');
+      
+      if (unreadCount > 0) {
+        notificationBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+        notificationBadge.classList.remove('d-none');
+      } else {
+        notificationBadge.classList.add('d-none');
+      }
+      
+      // عرض الإشعارات
+      if (notifications.length === 0) {
+        notificationsList.innerHTML = `<li><span class="dropdown-item text-center text-muted">لا توجد إشعارات جديدة</span></li>`;
+        return;
+      }
+      
+      notificationsList.innerHTML = notifications.slice(0, 10).map(notification => `
+        <li>
+          <a href="javascript:void(0)" class="dropdown-item notification-item ${notification.read ? '' : 'unread'}" 
+            onclick="handleNotificationClick('${notification.id}', '${notification.bookingId}', '${notification.type}')">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0">
+                <i class="bi bi-chat-dots-fill text-primary me-2"></i>
+                </div>
+              <div class="flex-grow-1 ms-2">
+                <div class="notification-title">${notification.title}</div>
+                <div class="notification-content">${notification.content}</div>
+                <div class="notification-time">${formatNotificationTime(notification.timestamp)}</div>
+                </div>
+              ${notification.read ? '' : '<div class="ms-2"><div class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></div></div>'}
+              </div>
+          </a>
+        </li>
+      `).join('');
+      
+      if (notifications.length > 10) {
+        notificationsList.innerHTML += `
+          <li><span class="dropdown-item text-center text-muted">+${notifications.length - 10} إشعارات أخرى</span></li>
+        `;
+      }
+    }
+
+    // تحديث وظيفة معالجة النقر على الإشعار
+    window.handleNotificationClick = function(notificationId, bookingId, type) {
+      console.log('معالجة النقر على الإشعار:', { notificationId, bookingId, type });
+      
+      // تحديث حالة الإشعار إلى مقروء
+      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+      const notificationIndex = notifications.findIndex(n => n.id === notificationId);
+      
+      if (notificationIndex >= 0) {
+        notifications[notificationIndex].read = true;
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        loadNotifications();
+      }
+      
+      // فتح المحادثة المتعلقة بالإشعار
+      if (type === 'new_message') {
+        const chatContainer = document.getElementById(`chat-${bookingId}`);
+        if (chatContainer) {
+        chatContainer.style.display = 'block';
+        loadMessages(bookingId);
+          chatContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    // تحديث وظيفة تنسيق وقت الإشعار
+    function formatNotificationTime(timestamp) {
+      const now = new Date();
+      const notificationDate = new Date(timestamp);
+      const diffMs = now - notificationDate;
+      const diffMins = Math.round(diffMs / 60000);
+      const diffHours = Math.round(diffMs / 3600000);
+      const diffDays = Math.round(diffMs / 86400000);
+      
+      if (diffMins < 1) return 'الآن';
+      if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
+      if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+      if (diffDays < 7) return `منذ ${diffDays} يوم`;
+      
+      return notificationDate.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // إضافة دالة تنسيق وقت الرسائل
+    function formatMessageTime(timestamp) {
+      if (!timestamp) return '';
+      
+      const messageDate = new Date(timestamp);
+      const now = new Date();
+      const diffMs = now - messageDate;
+      const diffMins = Math.round(diffMs / 60000);
+      const diffHours = Math.round(diffMs / 3600000);
+      const diffDays = Math.round(diffMs / 86400000);
+      
+      // تنسيق مخصص للرسائل
+      if (diffMins < 1) return 'الآن';
+      if (diffMins < 60) return `${diffMins} د`;
+      if (diffHours < 24) return `${diffHours} س`;
+      if (diffDays < 7) return `${diffDays} ي`;
+      
+      // تنسيق التاريخ والوقت للرسائل القديمة
+      return messageDate.toLocaleTimeString('ar-EG', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }) + ' ' + messageDate.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // تشغيل صوت الإشعار
+    function playNotificationSound() {
+      try {
+        const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3');
+        audio.volume = 0.3;
+        audio.play();
+      } catch (error) {
+        console.error('فشل تشغيل صوت الإشعار:', error);
+      }
+    }
+
+    // تحديث وظيفة فحص الإشعارات الجديدة
+    function checkNewNotifications() {
+      console.log('جاري فحص الإشعارات الجديدة...');
+      
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        console.log('لم يتم العثور على بيانات المستخدم');
+        return;
+      }
+
+      const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+      const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+
+      // البحث عن الرسائل الجديدة التي لم يتم إنشاء إشعارات لها
+      messages.forEach(message => {
+        // تجاهل الرسائل من النظام والرسائل المرسلة من المستخدم نفسه
+        if (message.sender === 'system' || message.sender === currentUser.id) return;
+
+        // تحقق من أن الرسالة موجهة للمستخدم الحالي
+        if (message.receiver !== currentUser.id) return;
+
+        // تحقق من عدم وجود إشعار سابق لهذه الرسالة
+        const existingNotification = notifications.find(n => n.messageId === message.id);
+        if (existingNotification) return;
+
+        // العثور على معلومات الحجز
+        const booking = bookings.find(b => b.id === message.bookingId);
+        if (!booking) return;
+
+        console.log('تم العثور على رسالة جديدة:', message);
+
+        // إنشاء إشعار للرسالة الجديدة
+        createNotification({
+          recipientId: currentUser.id,
+          senderId: message.sender,
+          senderName: message.senderName || booking.clientName || "مستخدم",
+          bookingId: message.bookingId,
+          messageId: message.id,
+          content: message.content,
+          type: 'new_message'
+        });
+      });
+    }
+
+    // تعيين جميع الإشعارات كمقروءة
+    window.markAllRead = function() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) return;
+
+      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+      let updated = false;
+
+      notifications.forEach(notification => {
+        if (notification.userId === currentUser.id && !notification.read) {
+          notification.read = true;
+          updated = true;
+        }
+      });
+
+      if (updated) {
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        loadNotifications();
+      }
+    };
+  </script>
+</body>
+</html>

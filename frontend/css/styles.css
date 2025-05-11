@@ -1,0 +1,213 @@
+:root {
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+  --success-color: #16a34a;
+  --success-dark: #15803d;
+  --background: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+}
+
+/* General Styles */
+body {
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.btn-success:hover {
+  background-color: var(--success-dark);
+  border-color: var(--success-dark);
+  transform: translateY(-1px);
+}
+
+.form-control, .form-select {
+  border-radius: var(--radius-sm);
+  border-color: var(--border-color);
+  padding: 0.75rem 1rem;
+  text-align: right;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Dashboard Specific Styles */
+.dashboard-section {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.worker-card {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.worker-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.worker-card .card-body {
+  padding: 1.5rem;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RTL Specific Styles */
+.input-group > .input-group-text {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.input-group > .form-control {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.input-group > .form-select {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+
+/* User Dashboard Styles */
+#professionOptions button, #budgetSection button, #locationSection select {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+#resultsSection {
+  border-top: 2px solid #ddd;
+  padding-top: 20px;
+}
+
+#workersList .col-md-4 {
+  margin-bottom: 20px;
+}
+
+/* Worker Dashboard Styles */
+#jobsSection button {
+  padding: 12px 20px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#jobDetailsSection {
+  border-top: 2px solid #ddd;
+  padding-top: 20px;
+}
+
+#workerProfile p {
+  font-size: 18px;
+  color: #333;
+}
+  
+/* Payment method logos */
+.payment-logo {
+  height: 40px;
+  width: auto;
+  max-width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+/* Cash icon */
+.payment-logo-cash {
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNNTEyIDgwYzAgMTcuNy0xNC4zIDMyLTMyIDMySDMyYy0xNy43IDAtMzItMTQuMy0zMi0zMnMxNC4zLTMyIDMyLTMySDQ4MGMxNy43IDAgMzIgMTQuMyAzMiAzMnpNMTYwIDM2OGMwLTEzLjMgMTAuNy0yNCAyNC0yNGgxNDRjMTMuMyAwIDI0IDEwLjcgMjQgMjRzLTEwLjcgMjQtMjQgMjRIMTg0Yy0xMy4zIDAtMjQtMTAuNy0yNC0yNHpNMCAxNzhDMCAxNTcuNiAxNi42IDE0MSAzNyAxNDFIMjc1Yy0yMy43IDM5LjctMjYuOSA5NS40LTkuOCAxMzkuMkg0MGMtMjIuNSAwLTQwLTE4LjctNDAtNDEuN1YxNzh6TTM3IDM0MWg0NzVjMjIuNSAwIDQwLTE4LjcgNDAtNDEuN1YxNzhjMC0yMC40LTE2LjYtMzctMzctMzdINDY3YzguNiA0MC4zIDYuOS04ODYuMiA5LjggNDkuMWMzLjYgMTQxLTExNC41IDEzOC43LTQ0MCAxNTAuOXoiIGZpbGw9IiMzMjk5MDAiLz48L3N2Zz4=') no-repeat center center;
+  background-size: contain;
+}
+
+/* Vodafone Cash logo */
+.payment-logo-vodafone {
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiPjxwYXRoIGQ9Ik0xMjAgNDBjMCAyMi4xLTE3LjkgNDAtNDAgNDBTNDAgNjIuMSA0MCA0MFM1Ny45IDAgODAgMHM0MCAxNy45IDQwIDQweiIgZmlsbD0iI2UwMzAyZiIvPjxwYXRoIGQ9Ik02MCAzMGgyNXYyMEg2MFYzMHoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTEwIDMwaDcwdjIwaC03MFYzMHoiIGZpbGw9IiNlMDMwMmYiLz48cGF0aCBkPSJNMTEwIDBIMjQwdjIwSDExMFYweiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0xMTAgNjBoMTMwdjIwSDExMFY2MHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=') no-repeat center center;
+  background-size: contain;
+}
+
+/* InstaPay logo */
+.payment-logo-instapay {
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiPjxwYXRoIGQ9Ik00MCA0MGMwIDIyLjEgMTcuOSA0MCA0MCA0MHM0MC0xNy45IDQwLTQwUzEwMi4xIDAgODAgMCA0MCAxNy45IDQwIDQweiIgZmlsbD0iIzAwN2JmZiIvPjxwYXRoIGQ9Ik0xMzAgNDBjMCAyMi4xIDE3LjkgNDAgNDAgNDBzNDAtMTcuOSA0MC00MFMxOTIuMSAwIDE3MCAwcy00MCAxNy45LTQwIDQweiIgZmlsbD0iIzI4YTc0NSIvPjxwYXRoIGQ9Ik04NSAzMEgxNjV2MjBIODVWMzB6IiBmaWxsPSIjZmZmIi8+PHRleHQgeD0iMTIwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE1IiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbnN0YVBheTwvdGV4dD48L3N2Zz4=') no-repeat center center;
+  background-size: contain;
+}
+
+/* Fawry logo */
+.payment-logo-fawry {
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgODAiPjxwYXRoIGQ9Ik0wIDBoMjQwdjgwSDBWMHoiIGZpbGw9IiNmYWRkMDAiLz48cGF0aCBkPSJNNDUgMjBoMTUwdjQwSDQ1VjIweiIgZmlsbD0iIzFkMzQ2NSIvPjx0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RmF3cnk8L3RleHQ+PC9zdmc+') no-repeat center center;
+  background-size: contain;
+}
+  

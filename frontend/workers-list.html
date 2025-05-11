@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قائمة الحرفيين - منصة الحرفيين</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .worker-card {
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      margin-bottom: 20px;
+    }
+    .worker-card:hover {
+      transform: translateY(-5px);
+    }
+    .worker-image {
+      height: 200px;
+      object-fit: cover;
+    }
+    .rating {
+      color: #ffc107;
+    }
+    .price {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .filter-section {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+    .selected-filters {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .filter-badge {
+      background-color: #007bff;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      margin: 5px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.svg" alt="منصة الحرفيين" height="40">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <!-- Selected Filters -->
+    <div class="selected-filters">
+      <h5 class="mb-3">الفلترة المختارة:</h5>
+      <div id="selectedFilters"></div>
+    </div>
+    
+    <div id="workersList" class="row">
+      <!-- Workers will be displayed here -->
+          </div>
+        </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/workers.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const workersList = document.getElementById('workersList');
+      const selectedFilters = document.getElementById('selectedFilters');
+      
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const selectedProfession = urlParams.get('profession');
+      const selectedBudget = urlParams.get('budget');
+      const selectedLocation = urlParams.get('location');
+
+      // Update selected filters display
+      function updateSelectedFilters() {
+        selectedFilters.innerHTML = '';
+        if (selectedProfession) {
+          const professionBadge = document.createElement('span');
+          professionBadge.className = 'filter-badge';
+          professionBadge.innerHTML = `<i class="bi bi-briefcase me-1"></i> ${selectedProfession}`;
+          selectedFilters.appendChild(professionBadge);
+        }
+        if (selectedBudget) {
+          const budgetText = getBudgetText(selectedBudget);
+          const budgetBadge = document.createElement('span');
+          budgetBadge.className = 'filter-badge';
+          budgetBadge.innerHTML = `<i class="bi bi-currency-dollar me-1"></i> ${budgetText}`;
+          selectedFilters.appendChild(budgetBadge);
+        }
+        if (selectedLocation && selectedLocation !== 'كل المواقع') {
+          const locationBadge = document.createElement('span');
+          locationBadge.className = 'filter-badge';
+          locationBadge.innerHTML = `<i class="bi bi-geo-alt me-1"></i> ${selectedLocation}`;
+          selectedFilters.appendChild(locationBadge);
+        }
+      }
+
+      // Function to get budget text
+      function getBudgetText(budget) {
+        switch(budget) {
+          case 'low': return 'ميزانية منخفضة (حتى 500 ج.م)';
+          case 'medium': return 'ميزانية متوسطة (500 - 1000 ج.م)';
+          case 'high': return 'ميزانية عالية (أكثر من 1000 ج.م)';
+          default: return '';
+        }
+      }
+
+      // Function to filter workers by budget
+      function filterByBudget(workers, budget) {
+        if (!budget) return workers;
+        
+        return workers.filter(worker => {
+          switch(budget) {
+            case 'low':
+              return worker.price <= 500;
+            case 'medium':
+              return worker.price > 500 && worker.price <= 1000;
+            case 'high':
+              return worker.price > 1000;
+            default:
+              return true;
+          }
+        });
+      }
+
+      // Function to filter workers by location
+      function filterByLocation(workers, location) {
+        if (!location || location === 'كل المواقع') return workers;
+        return workers.filter(worker => worker.location === location);
+      }
+
+      // Function to display workers
+      function displayWorkers(workers) {
+        workersList.innerHTML = '';
+
+        if (workers.length === 0) {
+          workersList.innerHTML = `
+            <div class="col-12 text-center">
+              <div class="alert alert-info">
+                <h4>لا يوجد حرفيين متاحين حالياً</h4>
+                <p>يرجى المحاولة لاحقاً أو تغيير معايير البحث</p>
+          </div>
+        </div>
+          `;
+          return;
+        }
+
+        // تحميل قائمة المستخدمين لمعرفة من لديه معرض صور
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        workers.forEach(worker => {
+          // البحث عن الحرفي في قائمة المستخدمين
+          const workerUser = users.find(user => 
+            (user.id === ('user_' + worker.id) || user.id === worker.id) && user.role === 'worker'
+          );
+          
+          // التحقق من وجود معرض صور
+          const hasGallery = workerUser && workerUser.gallery && workerUser.gallery.length > 0;
+          
+          // استخدام صورة المستخدم المسجلة إذا كان متاحاً
+          let workerImage = worker.image;
+          if (worker.isRegisteredUser && workerUser && workerUser.profileImage) {
+            workerImage = workerUser.profileImage;
+          }
+          
+          const workerCard = document.createElement('div');
+          workerCard.className = 'col-md-6 col-lg-4 mb-4';
+          workerCard.innerHTML = `
+            <div class="card h-100">
+              <img src="${workerImage}" class="card-img-top worker-image" alt="${worker.name}">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="card-title">${worker.name}</h5>
+                  ${worker.isRegisteredUser ? '<span class="badge bg-success" title="حرفي مسجل"><i class="bi bi-check-circle"></i> مسجل</span>' : ''}
+                  ${hasGallery ? '<span class="badge bg-info" title="يوجد معرض أعمال"><i class="bi bi-images"></i></span>' : ''}
+          </div>
+                <p class="text-muted">${worker.profession}</p>
+                <p class="text-muted small"><i class="bi bi-geo-alt"></i> ${worker.location}</p>
+                <div class="d-flex align-items-center mb-2">
+                  <span class="text-warning me-1">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                  <span class="me-2">${worker.rating}</span>
+                  <span class="text-muted">(${worker.reviews} تقييم)</span>
+          </div>
+                <p class="card-text">${worker.description}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="h5 mb-0">${worker.price} ج.م</span>
+                  <a href="booking.html?id=${worker.id}" class="btn btn-primary">
+                    <i class="bi bi-calendar-check me-1"></i> حجز موعد
+                  </a>
+          </div>
+        </div>
+      </div>
+          `;
+          workersList.appendChild(workerCard);
+        });
+      }
+
+      // Initial display
+      updateSelectedFilters();
+      
+      if (selectedProfession) {
+        let workers = getWorkersByProfession(selectedProfession);
+        workers = filterByBudget(workers, selectedBudget);
+        workers = filterByLocation(workers, selectedLocation);
+        displayWorkers(workers);
+      } else {
+        workersList.innerHTML = `
+          <div class="col-12 text-center">
+            <p class="text-muted">الرجاء اختيار الحرفة لعرض الحرفيين المتاحين</p>
+    </div>
+        `;
+      }
+
+      // Function to handle booking
+      window.bookWorker = function(workerId) {
+        const worker = getWorkerById(workerId);
+        if (worker) {
+          localStorage.setItem('selectedWorker', JSON.stringify(worker));
+          window.location.href = 'booking.html';
+        }
+      };
+    });
+  </script>
+</body>
+</html> 

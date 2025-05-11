@@ -1,0 +1,1231 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - منصة الحرفيين</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+        }
+        .btn-primary {
+            background: #2563eb;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+        .booking-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .booking-card.border-primary {
+            border-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+        }
+        .booking-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-completed {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .cancel-btn {
+            transition: all 0.2s ease;
+        }
+        .cancel-btn:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        .rating {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: bidi-override;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label {
+            float: right;
+            cursor: pointer;
+            color: #ccc;
+            font-size: 2rem;
+            margin: 0 2px;
+            transition: all 0.2s;
+        }
+        .rating label:before {
+            content: '★';
+        }
+        .rating input:checked ~ label,
+        .rating:not(:checked) label:hover,
+        .rating:not(:checked) label:hover ~ label {
+            color: #ffc107;
+        }
+        .rating input:checked ~ label:hover,
+        .rating input:checked ~ label:hover ~ label {
+            color: #ffdb70;
+        }
+        .rating-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .worker-rated {
+            color: #28a745;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        /* أنماط نظام المحادثات */
+        .chat-button {
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+        }
+        .chat-header {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #ffffff;
+        }
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        .chat-input button {
+            padding: 0.5rem 1rem;
+        }
+        .chat-message {
+            margin-bottom: 1rem;
+            max-width: 80%;
+            clear: both;
+        }
+        .worker-message {
+            float: left;
+            margin-right: 20%;
+        }
+        .client-message {
+            float: right;
+            margin-left: 20%;
+        }
+        .message-content {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            word-wrap: break-word;
+        }
+        .worker-message .message-content {
+            background-color: #e9ecef;
+            color: #212529;
+            border-top-left-radius: 0.25rem;
+        }
+        .client-message .message-content {
+            background-color: #007bff;
+            color: white;
+            border-top-right-radius: 0.25rem;
+        }
+        .message-meta {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+        .worker-message .message-meta {
+            text-align: left;
+        }
+        /* أضف هذه الأنماط للإشعارات */
+        .notification-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            transition: all 0.2s ease;
+        }
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+        .notification-item.unread {
+            background-color: #e8f4ff;
+        }
+        .notification-item .notification-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .notification-item .notification-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+        .notification-content {
+            font-size: 0.85rem;
+            color: #212529;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.svg" alt="منصة الحرفيين" height="40">
+            </a>
+            <div class="d-flex align-items-center">
+                <!-- إضافة زر الإشعارات -->
+                <div class="dropdown me-2 position-relative">
+                    <button class="btn btn-outline-primary position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell"></i>
+                        <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                            0
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                        <li>
+                            <h6 class="dropdown-header">الإشعارات</h6>
+                        </li>
+                        <div id="notificationsList">
+                            <li><span class="dropdown-item text-center text-muted">لا توجد إشعارات جديدة</span></li>
+                        </div>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><button class="dropdown-item text-center" onclick="markAllRead()">تعيين الكل كمقروء</button></li>
+                    </ul>
+                </div>
+                <a href="service-selection.html" class="btn btn-primary me-2">
+                    <i class="bi bi-plus-circle"></i> طلب خدمة جديدة
+                </a>
+                <a href="profile.html" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-person"></i> الملف الشخصي
+                </a>
+                <button class="btn btn-outline-danger" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">حجوزاتي</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="bookingsList">
+                            <!-- سيتم عرض الحجوزات هنا -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">ملخص الحساب</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="userInfo">
+                            <!-- سيتم عرض معلومات المستخدم هنا -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من تسجيل الدخول
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // عرض معلومات المستخدم
+            document.getElementById('userInfo').innerHTML = `
+                <div class="mb-3">
+                    <h6>الاسم</h6>
+                    <p>${currentUser.name}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>البريد الإلكتروني</h6>
+                    <p>${currentUser.email}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>رقم الهاتف</h6>
+                    <p>${currentUser.phone}</p>
+                </div>
+            `;
+
+            // عرض الحجوزات
+            displayBookings();
+            
+            // تهيئة مصفوفات المحادثات والرسائل في localStorage إذا لم تكن موجودة
+            if (!localStorage.getItem('chats')) {
+                localStorage.setItem('chats', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('messages')) {
+                localStorage.setItem('messages', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('notifications')) {
+                localStorage.setItem('notifications', JSON.stringify([]));
+            }
+
+            // تحميل الإشعارات
+            loadNotifications();
+            
+            // تهيئة فحص الإشعارات كل 30 ثانية
+            setInterval(checkNewNotifications, 30000);
+        });
+
+        function displayBookings() {
+            const bookingsList = document.getElementById('bookingsList');
+            
+            try {
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                const lastBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+
+                console.log('جميع الحجوزات:', bookings);
+                console.log('المستخدم الحالي:', currentUser);
+
+                // تصفية الحجوزات الخاصة بالمستخدم الحالي باستخدام البريد الإلكتروني أو اسم العميل أو رقم الهاتف
+                const userBookings = bookings.filter(booking => {
+                    return (booking.clientEmail && booking.clientEmail === currentUser.email) || 
+                           (booking.clientName && booking.clientName === currentUser.name) ||
+                           (booking.clientPhone && booking.clientPhone === currentUser.phone);
+                });
+
+                console.log('حجوزات المستخدم:', userBookings);
+
+                if (userBookings.length === 0) {
+                    bookingsList.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+                            <h5 class="mt-3">لا توجد حجوزات</h5>
+                            <p class="text-muted">لم تقم بأي حجز حتى الآن</p>
+                            <a href="service-selection.html" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> طلب خدمة جديدة
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // ترتيب الحجوزات من الأحدث إلى الأقدم
+                userBookings.sort((a, b) => {
+                    // التعامل مع حالة عدم وجود تاريخ الحجز
+                    const dateA = a.bookingDate ? new Date(a.bookingDate) : new Date(0);
+                    const dateB = b.bookingDate ? new Date(b.bookingDate) : new Date(0);
+                    return dateB - dateA;
+                });
+
+                // تحديد الحجز الأخير
+                const isNewBooking = (booking) => {
+                    if (!lastBooking || !booking.id) return false;
+                    return booking.id === lastBooking.id;
+                };
+
+                bookingsList.innerHTML = userBookings.map(booking => {
+                    const isLatest = isNewBooking(booking);
+                    const bookingStatus = booking.status || 'pending';
+                    const hasChat = bookingStatus === 'تم التأكيد' || bookingStatus === 'confirmed' || bookingStatus === 'pending' || bookingStatus === 'معلق';
+                    
+                    // تهيئة محادثة جديدة إذا كان الحجز مؤكداً ولا توجد محادثة
+                    if (hasChat) {
+                        initChat(booking.id, currentUser.id, booking.workerId, booking.workerName);
+                    }
+                    
+                    return `
+                        <div class="booking-card ${isLatest ? 'border-primary' : ''}">
+                            ${isLatest ? '<div class="alert alert-success mb-3">تم تأكيد الحجز بنجاح!</div>' : ''}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">${booking.workerName || 'حرفي'} - ${booking.workerProfession || 'غير محدد'}</h6>
+                                <span class="booking-status status-${getStatusClass(booking.status || 'معلق')}">
+                                    ${booking.status || 'معلق'}
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">التاريخ:</small>
+                                <p class="mb-0">${formatDate(booking.date || new Date())}</p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">الوقت:</small>
+                                <p class="mb-0">${booking.time || 'غير محدد'}</p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">نوع الخدمة:</small>
+                                <p class="mb-0">${booking.serviceType || 'غير محدد'}</p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">العنوان:</small>
+                                <p class="mb-0">${booking.address || 'غير محدد'}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">${booking.totalPrice || booking.price || 0} ج.م</span>
+                                ${booking.status !== 'مكتمل' ? `
+                                <button class="btn btn-sm btn-outline-danger cancel-btn" onclick="cancelBooking('${booking.id || ''}')">
+                                    <i class="bi bi-x-circle"></i> إلغاء الحجز
+                                </button>` : `
+                                ${booking.rated ? `
+                                <div class="worker-rated">
+                                    <i class="bi bi-check-circle-fill"></i> تم التقييم (${booking.rating}/5)
+                                </div>
+                                ` : `
+                                <button class="btn btn-sm btn-outline-primary" onclick="showRatingForm('${booking.id || ''}', '${booking.workerId || ''}', '${booking.workerName || 'حرفي'}')">
+                                    <i class="bi bi-star-fill"></i> تقييم الخدمة
+                                </button>
+                                `}`}
+                            </div>
+                            ${booking.status === 'مكتمل' && booking.rated ? `
+                            <div class="mt-2">
+                                <small class="text-muted">تقييمك:</small>
+                                <div>
+                                    ${getRatingStars(booking.rating)}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            ${hasChat ? `
+                            <!-- زر المحادثة وواجهة المحادثة -->
+                            <button class="btn btn-sm btn-outline-primary chat-button" onclick="toggleChat('chat-${booking.id}')">
+                                <i class="bi bi-chat-dots"></i> المحادثة مع الحرفي
+                            </button>
+                            
+                            <div id="chat-${booking.id}" class="chat-container">
+                                <div class="chat-header">
+                                    <span>محادثة مع ${booking.workerName || 'الحرفي'}</span>
+                                    <button class="btn btn-sm btn-light" onclick="toggleChat('chat-${booking.id}')">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                                <div id="messages-${booking.id}" class="chat-messages">
+                                    <!-- سيتم عرض الرسائل هنا -->
+                                </div>
+                                <div class="chat-input">
+                                    <input type="text" id="message-input-${booking.id}" placeholder="اكتب رسالتك هنا..." onkeypress="handleChatKeyPress(event, '${booking.id}', '${booking.workerId}')">
+                                    <button class="btn btn-primary" onclick="sendMessage('${booking.id}', '${booking.workerId}')">
+                                        <i class="bi bi-send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                // إضافة نموذج التقييم (مخفي بشكل افتراضي)
+                bookingsList.innerHTML += `
+                    <div class="modal fade" id="ratingModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">تقييم الخدمة</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="ratingWorkerName" class="mb-3"></p>
+                                    <div class="text-center mb-3">
+                                        <div class="rating">
+                                            <input type="radio" id="star5" name="rating" value="5">
+                                            <label for="star5" onclick="selectRating(5)"></label>
+                                            <input type="radio" id="star4" name="rating" value="4">
+                                            <label for="star4" onclick="selectRating(4)"></label>
+                                            <input type="radio" id="star3" name="rating" value="3">
+                                            <label for="star3" onclick="selectRating(3)"></label>
+                                            <input type="radio" id="star2" name="rating" value="2">
+                                            <label for="star2" onclick="selectRating(2)"></label>
+                                            <input type="radio" id="star1" name="rating" value="1">
+                                            <label for="star1" onclick="selectRating(1)"></label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ratingComment" class="form-label">تعليق (اختياري)</label>
+                                        <textarea class="form-control" id="ratingComment" rows="3" placeholder="اكتب تعليقك هنا..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                    <button type="button" class="btn btn-primary" id="submitRating">إرسال التقييم</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // إزالة بيانات الحجز الأخير بعد عرضه
+                if (lastBooking) {
+                    localStorage.removeItem('lastBooking');
+                }
+                
+                // تحديث المحادثات بعد عرض الحجوزات
+                userBookings.forEach(booking => {
+                    const bookingStatus = booking.status || 'pending';
+                    const hasChat = bookingStatus === 'تم التأكيد' || bookingStatus === 'confirmed' || bookingStatus === 'pending' || bookingStatus === 'معلق';
+                    
+                    if (hasChat) {
+                        loadMessages(booking.id);
+                    }
+                });
+            } catch (error) {
+                console.error('خطأ في عرض الحجوزات:', error);
+                bookingsList.innerHTML = `
+                    <div class="alert alert-danger">
+                        حدث خطأ أثناء تحميل الحجوزات. يرجى تحديث الصفحة.
+                    </div>
+                `;
+            }
+        }
+
+        // وظائف نظام المحادثات
+
+        // تهيئة محادثة جديدة إذا لم تكن موجودة
+        function initChat(bookingId, workerId, clientId, workerName) {
+            const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+            const existingChat = chats.find(chat => chat.bookingId === bookingId);
+            
+            if (!existingChat) {
+                const newChat = {
+                    id: 'chat_' + Date.now(),
+                    bookingId: bookingId,
+                    workerId: workerId,
+                    clientId: clientId,
+                    workerName: workerName,
+                    createdAt: new Date().toISOString()
+                };
+                
+                chats.push(newChat);
+                localStorage.setItem('chats', JSON.stringify(chats));
+                
+                // إضافة رسالة ترحيبية
+                const welcomeMessage = {
+                    id: 'msg_' + Date.now(),
+                    chatId: newChat.id,
+                    bookingId: bookingId,
+                    sender: 'system',
+                    content: `مرحباً! تم إنشاء محادثة بينك وبين ${workerName}. يمكنكما التواصل هنا حول تفاصيل الحجز.`,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+                messages.push(welcomeMessage);
+                localStorage.setItem('messages', JSON.stringify(messages));
+            }
+        }
+
+        // تبديل عرض المحادثة
+        function toggleChat(chatContainerId) {
+            const chatContainer = document.getElementById(chatContainerId);
+            if (chatContainer.style.display === 'block') {
+                chatContainer.style.display = 'none';
+            } else {
+                chatContainer.style.display = 'block';
+                const bookingId = chatContainerId.replace('chat-', '');
+                loadMessages(bookingId);
+                // تمرير إلى آخر الرسائل
+                const messagesContainer = document.getElementById(`messages-${bookingId}`);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // تحميل رسائل المحادثة
+        function loadMessages(bookingId) {
+            const messagesContainer = document.getElementById(`messages-${bookingId}`);
+            if (!messagesContainer) return;
+            
+            const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+            const chat = chats.find(chat => chat.bookingId === bookingId);
+            
+            if (!chat) return;
+            
+            const allMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+            const chatMessages = allMessages.filter(msg => msg.bookingId === bookingId);
+            
+            // ترتيب الرسائل حسب الوقت
+            chatMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            messagesContainer.innerHTML = '';
+            
+            chatMessages.forEach(message => {
+                const isClientMessage = message.sender === currentUser.id;
+                const isSystemMessage = message.sender === 'system';
+                
+                let messageHtml = '';
+                
+                if (isSystemMessage) {
+                    messageHtml = `
+                        <div class="text-center my-3">
+                            <span class="badge bg-light text-dark">${message.content}</span>
+                        </div>
+                    `;
+                } else {
+                    messageHtml = `
+                        <div class="chat-message ${isClientMessage ? 'client-message' : 'worker-message'}">
+                            <div class="message-content">
+                                ${message.content}
+                            </div>
+                            <div class="message-meta">
+                                <small class="text-muted">${formatMessageTime(message.timestamp)}</small>
+                                <small class="text-muted ms-2">${isClientMessage ? 'أنت' : chat.workerName}</small>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                messagesContainer.innerHTML += messageHtml;
+            });
+            
+            // تمرير إلى آخر الرسائل
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // معالجة ضغط Enter في مربع الإدخال
+        function handleChatKeyPress(event, bookingId, workerId) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage(bookingId, workerId);
+            }
+        }
+
+        // وظائف نظام الإشعارات
+            
+        // فحص وجود إشعارات جديدة
+        function checkNewNotifications() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (!currentUser || !currentUser.id) return;
+            
+            const allMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+            
+            // البحث عن الرسائل التي لم يتم قراءتها ولم يتم إنشاء إشعارات لها
+            const userChats = JSON.parse(localStorage.getItem('chats') || '[]')
+                .filter(chat => chat.workerId === currentUser.id || chat.clientId === currentUser.id)
+                .map(chat => chat.bookingId);
+            
+            let hasNewNotifications = false;
+            
+            // الحصول على الرسائل الواردة للمستخدم الحالي التي لم يتم قراءتها
+            allMessages.forEach(message => {
+                // تجاهل الرسائل من النظام
+                if (message.sender === 'system') return;
+                
+                // تجاهل الرسائل المرسلة من المستخدم نفسه
+                if (message.sender === currentUser.id) return;
+                
+                // تحقق مما إذا كانت الرسالة موجهة للمستخدم الحالي
+                const isForCurrentUser = message.receiver === currentUser.id || 
+                                         userChats.includes(message.bookingId);
+                
+                if (!isForCurrentUser) return;
+                
+                // تحقق من إذا كان هناك إشعار موجود لهذه الرسالة
+                const notificationExists = notifications.some(notification => 
+                    notification.messageId === message.id);
+                
+                if (notificationExists) return;
+                
+                // إنشاء إشعار جديد
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const booking = bookings.find(b => b.id === message.bookingId) || {};
+                
+                // العثور على بيانات المرسل
+                let senderName = "مستخدم";
+                if (message.sender) {
+                    // البحث عن المرسل في قاعدة البيانات
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const sender = users.find(u => u.id === message.sender);
+                    if (sender) {
+                        senderName = sender.name;
+                    } else if (booking.workerName && message.sender === booking.workerId) {
+                        senderName = booking.workerName;
+                    } else if (booking.clientName && message.sender === booking.clientId) {
+                        senderName = booking.clientName;
+                    }
+                }
+                
+                const notification = {
+                    id: 'notif_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                    userId: currentUser.id,
+                    messageId: message.id,
+                    bookingId: message.bookingId,
+                    title: `رسالة جديدة من ${senderName}`,
+                    content: message.content.length > 50 
+                        ? message.content.substring(0, 50) + '...' 
+                        : message.content,
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    sender: message.sender,
+                    type: 'message'
+                };
+                
+                notifications.push(notification);
+                hasNewNotifications = true;
+            });
+            
+            if (hasNewNotifications) {
+                // حفظ الإشعارات المحدثة
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                
+                // تحديث عرض الإشعارات
+                loadNotifications();
+                
+                // تنبيه صوتي (اختياري)
+                playNotificationSound();
+            }
+        }
+        
+        // تحميل وعرض الإشعارات
+        function loadNotifications() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (!currentUser || !currentUser.id) return;
+            
+            const notificationsList = document.getElementById('notificationsList');
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]')
+                .filter(notification => notification.userId === currentUser.id)
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // عرض عدد الإشعارات غير المقروءة
+            const unreadCount = notifications.filter(notification => !notification.read).length;
+            
+            const notificationBadge = document.getElementById('notificationBadge');
+            if (unreadCount > 0) {
+                notificationBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                notificationBadge.classList.remove('d-none');
+            } else {
+                notificationBadge.classList.add('d-none');
+            }
+            
+            // عرض الإشعارات في القائمة
+            if (notifications.length === 0) {
+                notificationsList.innerHTML = `<li><span class="dropdown-item text-center text-muted">لا توجد إشعارات جديدة</span></li>`;
+                return;
+            }
+            
+            notificationsList.innerHTML = notifications.slice(0, 10).map(notification => {
+                return `
+                <li>
+                    <a href="javascript:void(0)" class="dropdown-item notification-item ${notification.read ? '' : 'unread'}" 
+                        onclick="handleNotificationClick('${notification.id}', '${notification.bookingId}', '${notification.type}')">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-chat-dots-fill text-primary me-2"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-2">
+                                <div class="notification-title">${notification.title}</div>
+                                <div class="notification-content">${notification.content}</div>
+                                <div class="notification-time">${formatNotificationTime(notification.timestamp)}</div>
+                            </div>
+                            ${notification.read ? '' : '<div class="ms-2"><div class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></div></div>'}
+                        </div>
+                    </a>
+                </li>
+                `;
+            }).join('');
+            
+            if (notifications.length > 10) {
+                const remainingCount = notifications.length - 10;
+                notificationsList.innerHTML += `
+                <li><span class="dropdown-item text-center text-muted">+${remainingCount} إشعارات أخرى</span></li>
+                `;
+            }
+        }
+        
+        // معالجة النقر على الإشعار
+        function handleNotificationClick(notificationId, bookingId, type) {
+            // تحديث حالة الإشعار إلى مقروء
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+            const notificationIndex = notifications.findIndex(n => n.id === notificationId);
+            
+            if (notificationIndex >= 0) {
+                notifications[notificationIndex].read = true;
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                
+                // تحديث عرض الإشعارات
+                loadNotifications();
+            }
+            
+            // إذا كان الإشعار من نوع رسالة، افتح المحادثة
+            if (type === 'message' && bookingId) {
+                // البحث عن الحجز في القائمة
+                const bookingsContainer = document.getElementById('bookingsList');
+                const chatContainer = document.getElementById(`chat-${bookingId}`);
+                
+                if (chatContainer) {
+                    // افتح المحادثة
+                    chatContainer.style.display = 'block';
+                    loadMessages(bookingId);
+                    
+                    // تمرير إلى المحادثة
+                    setTimeout(() => {
+                        chatContainer.scrollIntoView({ behavior: 'smooth' });
+                        
+                        // تمرير إلى آخر الرسائل
+                        const messagesContainer = document.getElementById(`messages-${bookingId}`);
+                        if (messagesContainer) {
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    }, 100);
+                } else {
+                    // إذا لم يتم العثور على المحادثة في الصفحة الحالية، قم بتخزين معرف الحجز للانتقال إليه
+                    localStorage.setItem('openChatBookingId', bookingId);
+                    
+                    // إعادة تحميل الصفحة لعرض الحجز إذا لم يكن ظاهراً
+                    window.location.reload();
+                }
+            }
+        }
+        
+        // تعيين جميع الإشعارات كمقروءة
+        function markAllRead() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (!currentUser || !currentUser.id) return;
+            
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+            
+            // تحديث جميع الإشعارات الخاصة بالمستخدم الحالي
+            notifications.forEach(notification => {
+                if (notification.userId === currentUser.id) {
+                    notification.read = true;
+                }
+            });
+            
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            // تحديث عرض الإشعارات
+            loadNotifications();
+        }
+        
+        // تنسيق وقت الإشعار
+        function formatNotificationTime(timestamp) {
+            const now = new Date();
+            const notificationDate = new Date(timestamp);
+            const diffMs = now - notificationDate;
+            const diffMins = Math.round(diffMs / 60000); // دقائق
+            const diffHours = Math.round(diffMs / 3600000); // ساعات
+            const diffDays = Math.round(diffMs / 86400000); // أيام
+            
+            if (diffMins < 1) {
+                return 'الآن';
+            } else if (diffMins < 60) {
+                return `منذ ${diffMins} دقيقة`;
+            } else if (diffHours < 24) {
+                return `منذ ${diffHours} ساعة`;
+            } else if (diffDays < 7) {
+                return `منذ ${diffDays} يوم`;
+            } else {
+                return notificationDate.toLocaleDateString('ar-EG');
+            }
+        }
+        
+        // تشغيل صوت الإشعار
+        function playNotificationSound() {
+            try {
+                const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3');
+                audio.volume = 0.3;
+                audio.play();
+            } catch (error) {
+                console.error('فشل تشغيل صوت الإشعار:', error);
+            }
+        }
+
+        // إرسال رسالة جديدة
+        function sendMessage(bookingId, workerId) {
+            const messageInput = document.getElementById(`message-input-${bookingId}`);
+            const messageContent = messageInput.value.trim();
+            
+            if (!messageContent) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+            const chat = chats.find(chat => chat.bookingId === bookingId);
+            
+            if (!chat) return;
+            
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                chatId: chat.id,
+                bookingId: bookingId,
+                sender: currentUser.id,
+                receiver: workerId,
+                content: messageContent,
+                timestamp: new Date().toISOString()
+            };
+            
+            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+            messages.push(newMessage);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            
+            // إضافة إشعار للحرفي بالرسالة الجديدة
+            addMessageNotification(newMessage);
+            
+            // مسح مربع الإدخال وتحديث عرض الرسائل
+            messageInput.value = '';
+            loadMessages(bookingId);
+        }
+        
+        // إضافة إشعار برسالة جديدة
+        function addMessageNotification(message) {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const booking = bookings.find(b => b.id === message.bookingId) || {};
+            
+            // الحصول على اسم المرسل
+            let senderName = "مستخدم";
+            if (message.sender) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const sender = users.find(u => u.id === message.sender);
+                if (sender) {
+                    senderName = sender.name;
+                } else if (booking.workerName && message.sender === booking.workerId) {
+                    senderName = booking.workerName;
+                } else if (booking.clientName && message.sender === booking.clientId) {
+                    senderName = booking.clientName;
+                }
+            }
+            
+            const notification = {
+                id: 'notif_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                userId: message.receiver,
+                messageId: message.id,
+                bookingId: message.bookingId,
+                title: `رسالة جديدة من ${senderName}`,
+                content: message.content.length > 50 
+                    ? message.content.substring(0, 50) + '...' 
+                    : message.content,
+                timestamp: new Date().toISOString(),
+                read: false,
+                sender: message.sender,
+                type: 'message'
+            };
+            
+            const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+            notifications.push(notification);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            // إذا كان المستلم هو المستخدم الحالي، حدث العرض
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (currentUser.id === message.receiver) {
+                loadNotifications();
+                playNotificationSound();
+            }
+        }
+
+        // تنسيق وقت الرسالة
+        function formatMessageTime(timestamp) {
+            const date = new Date(timestamp);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'معلق':
+                case 'pending':
+                    return 'pending';
+                case 'تم التأكيد':
+                case 'confirmed':
+                    return 'confirmed';
+                case 'مكتمل':
+                case 'completed':
+                    return 'completed';
+                case 'ملغي':
+                case 'cancelled':
+                    return 'cancelled';
+                default:
+                    return 'pending';
+            }
+        }
+
+        function formatDate(dateString) {
+            try {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const date = new Date(dateString);
+                
+                // التحقق من أن التاريخ صالح
+                if (isNaN(date.getTime())) {
+                    return 'تاريخ غير محدد';
+                }
+                
+                return date.toLocaleDateString('ar-EG', options);
+            } catch (error) {
+                console.error('خطأ في تنسيق التاريخ:', error);
+                return 'تاريخ غير محدد';
+            }
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('هل أنت متأكد من إلغاء هذا الحجز؟')) {
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
+                
+                // حفظ القائمة المحدثة بعد الإلغاء
+                localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+                
+                // عرض رسالة نجاح مؤقتة
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    <strong>تم الإلغاء!</strong> تم إلغاء الحجز بنجاح.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                const bookingsCard = document.querySelector('.card');
+                bookingsCard.insertBefore(alertDiv, bookingsCard.firstChild);
+                
+                // إخفاء الرسالة بعد 3 ثوانٍ
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 3000);
+                
+                // تحديث عرض الحجوزات
+                displayBookings();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        function getRatingStars(rating) {
+            rating = parseInt(rating) || 0;
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="bi bi-star-fill text-warning"></i> ';
+                } else {
+                    stars += '<i class="bi bi-star text-muted"></i> ';
+                }
+            }
+            return stars;
+        }
+
+        let currentBookingId = '';
+        let currentWorkerId = '';
+        let selectedRatingValue = 0;
+
+        function showRatingForm(bookingId, workerId, workerName) {
+            currentBookingId = bookingId;
+            currentWorkerId = workerId;
+            selectedRatingValue = 0; // إعادة تعيين القيمة عند فتح النموذج
+            
+            // تعيين اسم الحرفي في النموذج
+            document.getElementById('ratingWorkerName').textContent = `كيف كانت تجربتك مع ${workerName}؟`;
+            
+            // إعادة تعيين نموذج التقييم
+            document.querySelectorAll('input[name="rating"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('ratingComment').value = '';
+            
+            // تعيين معالج الحدث لزر الإرسال
+            document.getElementById('submitRating').onclick = submitWorkerRating;
+            
+            // إضافة مستمع الأحداث لإعادة تعيين التقييم عند إغلاق النموذج
+            const ratingModalElement = document.getElementById('ratingModal');
+            ratingModalElement.addEventListener('hidden.bs.modal', resetRatingForm);
+            
+            // عرض النموذج
+            const ratingModal = new bootstrap.Modal(ratingModalElement);
+            ratingModal.show();
+        }
+        
+        function resetRatingForm() {
+            selectedRatingValue = 0;
+            document.querySelectorAll('input[name="rating"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('ratingComment').value = '';
+            console.log('تم إعادة تعيين نموذج التقييم');
+        }
+
+        function selectRating(value) {
+            selectedRatingValue = value;
+            // تحديد الراديو بوتون المناسب
+            document.getElementById('star' + value).checked = true;
+            console.log('تم اختيار تقييم: ' + value);
+        }
+
+        function submitWorkerRating() {
+            if (!selectedRatingValue) {
+                alert('الرجاء اختيار تقييم');
+                return;
+            }
+            
+            const comment = document.getElementById('ratingComment').value.trim();
+            
+            // تحديث بيانات الحجز لتسجيل التقييم
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const bookingIndex = bookings.findIndex(b => b.id === currentBookingId);
+            
+            if (bookingIndex >= 0) {
+                bookings[bookingIndex].rated = true;
+                bookings[bookingIndex].rating = selectedRatingValue;
+                bookings[bookingIndex].ratingComment = comment;
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+            }
+            
+            // تحديث تقييم الحرفي في قاعدة البيانات
+            updateWorkerRating(currentWorkerId, selectedRatingValue);
+            
+            // إغلاق النموذج
+            bootstrap.Modal.getInstance(document.getElementById('ratingModal')).hide();
+            
+            // عرض رسالة نجاح
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
+            alertDiv.innerHTML = `
+                <strong>شكراً لك!</strong> تم إرسال تقييمك بنجاح.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            const bookingsCard = document.querySelector('.card');
+            bookingsCard.insertBefore(alertDiv, bookingsCard.firstChild);
+            
+            // إخفاء الرسالة بعد 3 ثوانٍ
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+            
+            // تحديث عرض الحجوزات
+            displayBookings();
+        }
+
+        function updateWorkerRating(workerId, newRating) {
+            if (!workerId) return;
+
+            // البحث عن الحرفي في قاعدة بيانات المستخدمين
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const workerIndex = users.findIndex(user => user.id === workerId);
+
+            if (workerIndex >= 0) {
+                const worker = users[workerIndex];
+                
+                // تحديث عدد التقييمات ومتوسط التقييم
+                if (!worker.reviews) worker.reviews = 0;
+                if (!worker.totalRating) worker.totalRating = 0;
+                
+                worker.reviews++;
+                worker.totalRating += newRating;
+                worker.rating = (worker.totalRating / worker.reviews).toFixed(1);
+                
+                users[workerIndex] = worker;
+                localStorage.setItem('users', JSON.stringify(users));
+            } else {
+                // إذا لم يتم العثور على الحرفي في قاعدة بيانات المستخدمين، فقد يكون في قاعدة بيانات الحرفيين
+                // استدعاء التعديلات على قاعدة بيانات الحرفيين (workers.js)
+                updateWorkerDatabaseRating(workerId, newRating);
+            }
+        }
+        
+        function updateWorkerDatabaseRating(workerId, newRating) {
+            // الحصول على جميع الحرفيين من قاعدة البيانات
+            try {
+                // تم تحويل parseInt إلى Number للحصول على قيمة عددية من workerId
+                const workerIdNumber = Number(workerId);
+                if (isNaN(workerIdNumber)) return;
+                
+                for (const profession in window.workersDatabase) {
+                    const workers = window.workersDatabase[profession];
+                    const workerIndex = workers.findIndex(w => w.id === workerIdNumber);
+                    
+                    if (workerIndex >= 0) {
+                        const worker = workers[workerIndex];
+                        
+                        // تحديث عدد التقييمات ومتوسط التقييم
+                        if (!worker.reviews) worker.reviews = 0;
+                        worker.reviews++;
+                        
+                        // تحديث التقييم مع الحفاظ على تنسيق العشري
+                        const oldRating = parseFloat(worker.rating) || 0;
+                        const totalRatings = worker.reviews - 1; // عدد التقييمات قبل الإضافة
+                        
+                        const newAverageRating = ((oldRating * totalRatings) + newRating) / worker.reviews;
+                        worker.rating = newAverageRating.toFixed(1);
+                        
+                        // نظراً لأن هذا التحديث مؤقت، فيمكن استخدام localStorage لتخزين البيانات المحدثة
+                        localStorage.setItem('updatedWorkerRatings', JSON.stringify({
+                            workerId: workerIdNumber,
+                            newRating: newAverageRating,
+                            reviews: worker.reviews
+                        }));
+                        
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.error('خطأ في تحديث تقييم الحرفي:', error);
+            }
+        }
+
+        function formatNotificationDate(dateString) {
+            try {
+                const notificationDate = new Date(dateString);
+                return notificationDate.toLocaleDateString('ar-EG');
+            } catch (error) {
+                return dateString || 'تاريخ غير معروف';
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,905 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ… - ظ…ظ†طµط© ط§ظ„ط­ط±ظپظٹظٹظ†</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+        }
+        .btn-primary {
+            background: #2563eb;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+        .booking-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .booking-card.border-primary {
+            border-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+        }
+        .booking-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-completed {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .cancel-btn {
+            transition: all 0.2s ease;
+        }
+        .cancel-btn:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        .rating {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: bidi-override;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label {
+            float: right;
+            cursor: pointer;
+            color: #ccc;
+            font-size: 2rem;
+            margin: 0 2px;
+            transition: all 0.2s;
+        }
+        .rating label:before {
+            content: 'âک…';
+        }
+        .rating input:checked ~ label,
+        .rating:not(:checked) label:hover,
+        .rating:not(:checked) label:hover ~ label {
+            color: #ffc107;
+        }
+        .rating input:checked ~ label:hover,
+        .rating input:checked ~ label:hover ~ label {
+            color: #ffdb70;
+        }
+        .rating-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .worker-rated {
+            color: #28a745;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        /* ط£ظ†ظ…ط§ط· ظ†ط¸ط§ظ… ط§ظ„ظ…ط­ط§ط¯ط«ط§طھ */
+        .chat-button {
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .chat-container {
+            display: none;
+            margin-top: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #ffffff;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #dee2e6;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin-left: 10px;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-message.user-message {
+            align-items: flex-start;
+        }
+        .chat-message.worker-message {
+            align-items: flex-end;
+        }
+        .message-content {
+            max-width: 80%;
+            padding: 8px 15px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        .user-message .message-content {
+            background-color: #f0f2f5;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+        .worker-message .message-content {
+            background-color: #cce5ff;
+            color: #004085;
+            border-bottom-right-radius: 5px;
+        }
+        .message-meta {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 3px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.svg" alt="ظ…ظ†طµط© ط§ظ„ط­ط±ظپظٹظٹظ†" height="40">
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="service-selection.html" class="btn btn-primary me-2">
+                    <i class="bi bi-plus-circle"></i> ط·ظ„ط¨ ط®ط¯ظ…ط© ط¬ط¯ظٹط¯ط©
+                </a>
+                <a href="profile.html" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-person"></i> ط§ظ„ظ…ظ„ظپ ط§ظ„ط´ط®طµظٹ
+                </a>
+                <button class="btn btn-outline-danger" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">ط­ط¬ظˆط²ط§طھظٹ</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="bookingsList">
+                            <!-- ط³ظٹطھظ… ط¹ط±ط¶ ط§ظ„ط­ط¬ظˆط²ط§طھ ظ‡ظ†ط§ -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">ظ…ظ„ط®طµ ط§ظ„ط­ط³ط§ط¨</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="userInfo">
+                            <!-- ط³ظٹطھظ… ط¹ط±ط¶ ظ…ط¹ظ„ظˆظ…ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ… ظ‡ظ†ط§ -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ط§ظ„طھط­ظ‚ظ‚ ظ…ظ† طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // ط¹ط±ط¶ ظ…ط¹ظ„ظˆظ…ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…
+            document.getElementById('userInfo').innerHTML = `
+                <div class="mb-3">
+                    <h6>ط§ظ„ط§ط³ظ…</h6>
+                    <p>${currentUser.name}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</h6>
+                    <p>${currentUser.email}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>ط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ</h6>
+                    <p>${currentUser.phone}</p>
+                </div>
+            `;
+
+            // ط¹ط±ط¶ ط§ظ„ط­ط¬ظˆط²ط§طھ
+            displayBookings();
+            
+            // طھظ‡ظٹط¦ط© ظ…طµظپظˆظپط§طھ ط§ظ„ظ…ط­ط§ط¯ط«ط§طھ ظˆط§ظ„ط±ط³ط§ط¦ظ„ ظپظٹ localStorage ط¥ط°ط§ ظ„ظ… طھظƒظ† ظ…ظˆط¬ظˆط¯ط©
+            if (!localStorage.getItem('chats')) {
+                localStorage.setItem('chats', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('messages')) {
+                localStorage.setItem('messages', JSON.stringify([]));
+            }
+        });
+
+        function displayBookings() {
+            const bookingsList = document.getElementById('bookingsList');
+            
+            try {
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                const lastBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+
+                console.log('ط¬ظ…ظٹط¹ ط§ظ„ط­ط¬ظˆط²ط§طھ:', bookings);
+                console.log('ط§ظ„ظ…ط³طھط®ط¯ظ… ط§ظ„ط­ط§ظ„ظٹ:', currentUser);
+
+                // طھطµظپظٹط© ط§ظ„ط­ط¬ظˆط²ط§طھ ط§ظ„ط®ط§طµط© ط¨ط§ظ„ظ…ط³طھط®ط¯ظ… ط§ظ„ط­ط§ظ„ظٹ ط¨ط§ط³طھط®ط¯ط§ظ… ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ ط£ظˆ ط§ط³ظ… ط§ظ„ط¹ظ…ظٹظ„ ط£ظˆ ط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ
+                const userBookings = bookings.filter(booking => {
+                    return (booking.clientEmail && booking.clientEmail === currentUser.email) || 
+                           (booking.clientName && booking.clientName === currentUser.name) ||
+                           (booking.clientPhone && booking.clientPhone === currentUser.phone);
+                });
+
+                console.log('ط­ط¬ظˆط²ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…:', userBookings);
+
+                if (userBookings.length === 0) {
+                    bookingsList.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+                            <h5 class="mt-3">ظ„ط§ طھظˆط¬ط¯ ط­ط¬ظˆط²ط§طھ</h5>
+                            <p class="text-muted">ظ„ظ… طھظ‚ظ… ط¨ط£ظٹ ط­ط¬ط² ط­طھظ‰ ط§ظ„ط¢ظ†</p>
+                            <a href="service-selection.html" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> ط·ظ„ط¨ ط®ط¯ظ…ط© ط¬ط¯ظٹط¯ط©
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // طھط±طھظٹط¨ ط§ظ„ط­ط¬ظˆط²ط§طھ ظ…ظ† ط§ظ„ط£ط­ط¯ط« ط¥ظ„ظ‰ ط§ظ„ط£ظ‚ط¯ظ…
+                userBookings.sort((a, b) => {
+                    // ط§ظ„طھط¹ط§ظ…ظ„ ظ…ط¹ ط­ط§ظ„ط© ط¹ط¯ظ… ظˆط¬ظˆط¯ طھط§ط±ظٹط® ط§ظ„ط­ط¬ط²
+                    const dateA = a.bookingDate ? new Date(a.bookingDate) : new Date(0);
+                    const dateB = b.bookingDate ? new Date(b.bookingDate) : new Date(0);
+                    return dateB - dateA;
+                });
+
+                // طھط­ط¯ظٹط¯ ط§ظ„ط­ط¬ط² ط§ظ„ط£ط®ظٹط±
+                const isNewBooking = (booking) => {
+                    if (!lastBooking || !booking.id) return false;
+                    return booking.id === lastBooking.id;
+                };
+
+                bookingsList.innerHTML = userBookings.map(booking => {
+                    const isLatest = isNewBooking(booking);
+                    const bookingStatus = booking.status || 'pending';
+                    const hasChat = bookingStatus === 'طھظ… ط§ظ„طھط£ظƒظٹط¯' || bookingStatus === 'confirmed' || bookingStatus === 'pending' || bookingStatus === 'ظ…ط¹ظ„ظ‚';
+                    
+                    // طھظ‡ظٹط¦ط© ظ…ط­ط§ط¯ط«ط© ط¬ط¯ظٹط¯ط© ط¥ط°ط§ ظƒط§ظ† ط§ظ„ط­ط¬ط² ظ…ط¤ظƒط¯ط§ظ‹ ظˆظ„ط§ طھظˆط¬ط¯ ظ…ط­ط§ط¯ط«ط©
+                    if (hasChat) {
+                        initChat(booking.id, currentUser.id, booking.workerId, booking.workerName);
+                    }
+                    
+                    return `
+                        <div class="booking-card ${isLatest ? 'border-primary' : ''}">
+                            ${isLatest ? '<div class="alert alert-success mb-3">طھظ… طھط£ظƒظٹط¯ ط§ظ„ط­ط¬ط² ط¨ظ†ط¬ط§ط­!</div>' : ''}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">${booking.workerName || 'ط­ط±ظپظٹ'} - ${booking.workerProfession || 'ط؛ظٹط± ظ…ط­ط¯ط¯'}</h6>
+                                <span class="booking-status status-${getStatusClass(booking.status || 'ظ…ط¹ظ„ظ‚')}">
+                                    ${booking.status || 'ظ…ط¹ظ„ظ‚'}
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">ط§ظ„طھط§ط±ظٹط®:</small>
+                                <p class="mb-0">${formatDate(booking.date || new Date())}</p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">ط§ظ„ظˆظ‚طھ:</small>
+                                <p class="mb-0">${booking.time || 'ط؛ظٹط± ظ…ط­ط¯ط¯'}</p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">ظ†ظˆط¹ ط§ظ„ط®ط¯ظ…ط©:</small>
+                                <p class="mb-0">${booking.serviceType || 'ط؛ظٹط± ظ…ط­ط¯ط¯'}</p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">ط§ظ„ط¹ظ†ظˆط§ظ†:</small>
+                                <p class="mb-0">${booking.address || 'ط؛ظٹط± ظ…ط­ط¯ط¯'}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">${booking.totalPrice || booking.price || 0} ط¬.ظ…</span>
+                                ${booking.status !== 'ظ…ظƒطھظ…ظ„' ? `
+                                <button class="btn btn-sm btn-outline-danger cancel-btn" onclick="cancelBooking('${booking.id || ''}')">
+                                    <i class="bi bi-x-circle"></i> ط¥ظ„ط؛ط§ط، ط§ظ„ط­ط¬ط²
+                                </button>` : `
+                                ${booking.rated ? `
+                                <div class="worker-rated">
+                                    <i class="bi bi-check-circle-fill"></i> طھظ… ط§ظ„طھظ‚ظٹظٹظ… (${booking.rating}/5)
+                                </div>
+                                ` : `
+                                <button class="btn btn-sm btn-outline-primary" onclick="showRatingForm('${booking.id || ''}', '${booking.workerId || ''}', '${booking.workerName || 'ط­ط±ظپظٹ'}')">
+                                    <i class="bi bi-star-fill"></i> طھظ‚ظٹظٹظ… ط§ظ„ط®ط¯ظ…ط©
+                                </button>
+                                `}`}
+                            </div>
+                            ${booking.status === 'ظ…ظƒطھظ…ظ„' && booking.rated ? `
+                            <div class="mt-2">
+                                <small class="text-muted">طھظ‚ظٹظٹظ…ظƒ:</small>
+                                <div>
+                                    ${getRatingStars(booking.rating)}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            ${hasChat ? `
+                            <!-- ط²ط± ط§ظ„ظ…ط­ط§ط¯ط«ط© ظˆظˆط§ط¬ظ‡ط© ط§ظ„ظ…ط­ط§ط¯ط«ط© -->
+                            <button class="btn btn-sm btn-outline-primary chat-button" onclick="toggleChat('chat-${booking.id}')">
+                                <i class="bi bi-chat-dots"></i> ط§ظ„ظ…ط­ط§ط¯ط«ط© ظ…ط¹ ط§ظ„ط­ط±ظپظٹ
+                            </button>
+                            
+                            <div id="chat-${booking.id}" class="chat-container">
+                                <div class="chat-header">
+                                    <span>ظ…ط­ط§ط¯ط«ط© ظ…ط¹ ${booking.workerName || 'ط§ظ„ط­ط±ظپظٹ'}</span>
+                                    <button class="btn btn-sm btn-light" onclick="toggleChat('chat-${booking.id}')">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                                <div id="messages-${booking.id}" class="chat-messages">
+                                    <!-- ط³ظٹطھظ… ط¹ط±ط¶ ط§ظ„ط±ط³ط§ط¦ظ„ ظ‡ظ†ط§ -->
+                                </div>
+                                <div class="chat-input">
+                                    <input type="text" id="message-input-${booking.id}" placeholder="ط§ظƒطھط¨ ط±ط³ط§ظ„طھظƒ ظ‡ظ†ط§..." onkeypress="handleChatKeyPress(event, '${booking.id}', '${booking.workerId}')">
+                                    <button class="btn btn-primary" onclick="sendMessage('${booking.id}', '${booking.workerId}')">
+                                        <i class="bi bi-send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                // ط¥ط¶ط§ظپط© ظ†ظ…ظˆط°ط¬ ط§ظ„طھظ‚ظٹظٹظ… (ظ…ط®ظپظٹ ط¨ط´ظƒظ„ ط§ظپطھط±ط§ط¶ظٹ)
+                bookingsList.innerHTML += `
+                    <div class="modal fade" id="ratingModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">طھظ‚ظٹظٹظ… ط§ظ„ط®ط¯ظ…ط©</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="ratingWorkerName" class="mb-3"></p>
+                                    <div class="text-center mb-3">
+                                        <div class="rating">
+                                            <input type="radio" id="star5" name="rating" value="5">
+                                            <label for="star5" onclick="selectRating(5)"></label>
+                                            <input type="radio" id="star4" name="rating" value="4">
+                                            <label for="star4" onclick="selectRating(4)"></label>
+                                            <input type="radio" id="star3" name="rating" value="3">
+                                            <label for="star3" onclick="selectRating(3)"></label>
+                                            <input type="radio" id="star2" name="rating" value="2">
+                                            <label for="star2" onclick="selectRating(2)"></label>
+                                            <input type="radio" id="star1" name="rating" value="1">
+                                            <label for="star1" onclick="selectRating(1)"></label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ratingComment" class="form-label">طھط¹ظ„ظٹظ‚ (ط§ط®طھظٹط§ط±ظٹ)</label>
+                                        <textarea class="form-control" id="ratingComment" rows="3" placeholder="ط§ظƒطھط¨ طھط¹ظ„ظٹظ‚ظƒ ظ‡ظ†ط§..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ط¥ظ„ط؛ط§ط،</button>
+                                    <button type="button" class="btn btn-primary" id="submitRating">ط¥ط±ط³ط§ظ„ ط§ظ„طھظ‚ظٹظٹظ…</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // ط¥ط²ط§ظ„ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ط­ط¬ط² ط§ظ„ط£ط®ظٹط± ط¨ط¹ط¯ ط¹ط±ط¶ظ‡
+                if (lastBooking) {
+                    localStorage.removeItem('lastBooking');
+                }
+                
+                // طھط­ط¯ظٹط« ط§ظ„ظ…ط­ط§ط¯ط«ط§طھ ط¨ط¹ط¯ ط¹ط±ط¶ ط§ظ„ط­ط¬ظˆط²ط§طھ
+                userBookings.forEach(booking => {
+                    const bookingStatus = booking.status || 'pending';
+                    const hasChat = bookingStatus === 'طھظ… ط§ظ„طھط£ظƒظٹط¯' || bookingStatus === 'confirmed' || bookingStatus === 'pending' || bookingStatus === 'ظ…ط¹ظ„ظ‚';
+                    
+                    if (hasChat) {
+                        loadMessages(booking.id);
+                    }
+                });
+            } catch (error) {
+                console.error('ط®ط·ط£ ظپظٹ ط¹ط±ط¶ ط§ظ„ط­ط¬ظˆط²ط§طھ:', error);
+                bookingsList.innerHTML = `
+                    <div class="alert alert-danger">
+                        ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، طھط­ظ…ظٹظ„ ط§ظ„ط­ط¬ظˆط²ط§طھ. ظٹط±ط¬ظ‰ طھط­ط¯ظٹط« ط§ظ„طµظپط­ط©.
+                    </div>
+                `;
+            }
+        }
+
+        // ظˆط¸ط§ط¦ظپ ظ†ط¸ط§ظ… ط§ظ„ظ…ط­ط§ط¯ط«ط§طھ
+
+        // طھظ‡ظٹط¦ط© ظ…ط­ط§ط¯ط«ط© ط¬ط¯ظٹط¯ط© ط¥ط°ط§ ظ„ظ… طھظƒظ† ظ…ظˆط¬ظˆط¯ط©
+        function initChat(bookingId, workerId, clientId, workerName) {
+            const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+            const existingChat = chats.find(chat => chat.bookingId === bookingId);
+            
+            if (!existingChat) {
+                const newChat = {
+                    id: 'chat_' + Date.now(),
+                    bookingId: bookingId,
+                    workerId: workerId,
+                    clientId: clientId,
+                    workerName: workerName,
+                    createdAt: new Date().toISOString()
+                };
+                
+                chats.push(newChat);
+                localStorage.setItem('chats', JSON.stringify(chats));
+                
+                // ط¥ط¶ط§ظپط© ط±ط³ط§ظ„ط© طھط±ط­ظٹط¨ظٹط©
+                const welcomeMessage = {
+                    id: 'msg_' + Date.now(),
+                    chatId: newChat.id,
+                    bookingId: bookingId,
+                    sender: 'system',
+                    content: `ظ…ط±ط­ط¨ط§ظ‹! طھظ… ط¥ظ†ط´ط§ط، ظ…ط­ط§ط¯ط«ط© ط¨ظٹظ†ظƒ ظˆط¨ظٹظ† ${workerName}. ظٹظ…ظƒظ†ظƒظ…ط§ ط§ظ„طھظˆط§طµظ„ ظ‡ظ†ط§ ط­ظˆظ„ طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط².`,
+                    timestamp: new Date().toISOString()
+                };
+                
+                const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+                messages.push(welcomeMessage);
+                localStorage.setItem('messages', JSON.stringify(messages));
+            }
+        }
+
+        // طھط¨ط¯ظٹظ„ ط¹ط±ط¶ ط§ظ„ظ…ط­ط§ط¯ط«ط©
+        function toggleChat(chatContainerId) {
+            const chatContainer = document.getElementById(chatContainerId);
+            if (chatContainer.style.display === 'block') {
+                chatContainer.style.display = 'none';
+            } else {
+                chatContainer.style.display = 'block';
+                const bookingId = chatContainerId.replace('chat-', '');
+                loadMessages(bookingId);
+                // طھظ…ط±ظٹط± ط¥ظ„ظ‰ ط¢ط®ط± ط§ظ„ط±ط³ط§ط¦ظ„
+                const messagesContainer = document.getElementById(`messages-${bookingId}`);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // طھط­ظ…ظٹظ„ ط±ط³ط§ط¦ظ„ ط§ظ„ظ…ط­ط§ط¯ط«ط©
+        function loadMessages(bookingId) {
+            const messagesContainer = document.getElementById(`messages-${bookingId}`);
+            if (!messagesContainer) return;
+            
+            const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+            const chat = chats.find(chat => chat.bookingId === bookingId);
+            
+            if (!chat) return;
+            
+            const allMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+            const chatMessages = allMessages.filter(msg => msg.bookingId === bookingId);
+            
+            // طھط±طھظٹط¨ ط§ظ„ط±ط³ط§ط¦ظ„ ط­ط³ط¨ ط§ظ„ظˆظ‚طھ
+            chatMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            messagesContainer.innerHTML = '';
+            
+            chatMessages.forEach(message => {
+                const isUserMessage = message.sender === currentUser.id;
+                const isSystemMessage = message.sender === 'system';
+                
+                let messageHtml = '';
+                
+                if (isSystemMessage) {
+                    messageHtml = `
+                        <div class="text-center my-3">
+                            <span class="badge bg-light text-dark">${message.content}</span>
+                        </div>
+                    `;
+                } else {
+                    messageHtml = `
+                        <div class="chat-message ${isUserMessage ? 'user-message' : 'worker-message'}">
+                            <div class="message-content">
+                                ${message.content}
+                            </div>
+                            <div class="message-meta">
+                                ${formatMessageTime(message.timestamp)}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                messagesContainer.innerHTML += messageHtml;
+            });
+            
+            // طھظ…ط±ظٹط± ط¥ظ„ظ‰ ط¢ط®ط± ط§ظ„ط±ط³ط§ط¦ظ„
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // ظ…ط¹ط§ظ„ط¬ط© ط¶ط؛ط· Enter ظپظٹ ظ…ط±ط¨ط¹ ط§ظ„ط¥ط¯ط®ط§ظ„
+        function handleChatKeyPress(event, bookingId, workerId) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage(bookingId, workerId);
+            }
+        }
+
+        // ط¥ط±ط³ط§ظ„ ط±ط³ط§ظ„ط© ط¬ط¯ظٹط¯ط©
+        function sendMessage(bookingId, workerId) {
+            const messageInput = document.getElementById(`message-input-${bookingId}`);
+            const messageContent = messageInput.value.trim();
+            
+            if (!messageContent) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+            const chat = chats.find(chat => chat.bookingId === bookingId);
+            
+            if (!chat) return;
+            
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                chatId: chat.id,
+                bookingId: bookingId,
+                sender: currentUser.id,
+                receiver: workerId,
+                content: messageContent,
+                timestamp: new Date().toISOString()
+            };
+            
+            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+            messages.push(newMessage);
+            localStorage.setItem('messages', JSON.stringify(messages));
+            
+            // ط¥ط¶ط§ظپط© ط±ط¯ ط§ظپطھط±ط§ط¶ظٹ ظ…ظ† ط§ظ„ط­ط±ظپظٹ (ظ„ط£ط؛ط±ط§ط¶ ط§ظ„ط¹ط±ط¶ ظپظ‚ط·)
+            setTimeout(() => {
+                if (Math.random() > 0.7) { // 30% ظپط±طµط© ط£ظ† ظٹط±ط¯ ط§ظ„ط­ط±ظپظٹ
+                    const workerReplies = [
+                        'ط´ظƒط±ط§ظ‹ ظ„طھظˆط§طµظ„ظƒ! ط³ط£ظƒظˆظ† ظ…طھظˆط§ط¬ط¯ ظپظٹ ط§ظ„ظ…ظˆط¹ط¯ ط§ظ„ظ…ط­ط¯ط¯.',
+                        'طھظ… ط§ط³طھظ„ط§ظ… ط±ط³ط§ظ„طھظƒطŒ ظ‡ظ„ ظ„ط¯ظٹظƒ ط£ظٹ ط§ط³طھظپط³ط§ط±ط§طھ ط£ط®ط±ظ‰طں',
+                        'ط¨ط§ظ„طھط£ظƒظٹط¯طŒ ط³ط£ظ‚ظˆظ… ط¨ط¥ط­ط¶ط§ط± ط¬ظ…ظٹط¹ ط§ظ„ظ…ط¹ط¯ط§طھ ط§ظ„ظ„ط§ط²ظ…ط© ظ…ط¹ظٹ.',
+                        'ظ‡ظ„ ظٹظ…ظƒظ†ظƒ طھط£ظƒظٹط¯ ط§ظ„ط¹ظ†ظˆط§ظ† ط¨ط§ظ„طھظپطµظٹظ„طں',
+                        'ظ‡ظ„ ظ‡ظ†ط§ظƒ ظ…ظˆط§طµظپط§طھ ط®ط§طµط© ظٹط¬ط¨ ط£ظ† ط£ط¹ط±ظپظ‡ط§ ظ‚ط¨ظ„ ط§ظ„ظ…ظˆط¹ط¯طں'
+                    ];
+                    
+                    const randomReply = workerReplies[Math.floor(Math.random() * workerReplies.length)];
+                    
+                    const workerReply = {
+                        id: 'msg_' + Date.now(),
+                        chatId: chat.id,
+                        bookingId: bookingId,
+                        sender: workerId,
+                        receiver: currentUser.id,
+                        content: randomReply,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    const updatedMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+                    updatedMessages.push(workerReply);
+                    localStorage.setItem('messages', JSON.stringify(updatedMessages));
+                    
+                    loadMessages(bookingId);
+                }
+            }, 1000 + Math.random() * 2000); // طھط£ط®ظٹط± ط¹ط´ظˆط§ط¦ظٹ ط¨ظٹظ† 1-3 ط«ظˆط§ظ†ظچ
+            
+            // ظ…ط³ط­ ظ…ط±ط¨ط¹ ط§ظ„ط¥ط¯ط®ط§ظ„ ظˆطھط­ط¯ظٹط« ط¹ط±ط¶ ط§ظ„ط±ط³ط§ط¦ظ„
+            messageInput.value = '';
+            loadMessages(bookingId);
+        }
+
+        // طھظ†ط³ظٹظ‚ ظˆظ‚طھ ط§ظ„ط±ط³ط§ظ„ط©
+        function formatMessageTime(timestamp) {
+            const date = new Date(timestamp);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'ظ…ط¹ظ„ظ‚':
+                case 'pending':
+                    return 'pending';
+                case 'طھظ… ط§ظ„طھط£ظƒظٹط¯':
+                case 'confirmed':
+                    return 'confirmed';
+                case 'ظ…ظƒطھظ…ظ„':
+                case 'completed':
+                    return 'completed';
+                case 'ظ…ظ„ط؛ظٹ':
+                case 'cancelled':
+                    return 'cancelled';
+                default:
+                    return 'pending';
+            }
+        }
+
+        function formatDate(dateString) {
+            try {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const date = new Date(dateString);
+                
+                // التحقق من أن التاريخ صالح
+                if (isNaN(date.getTime())) {
+                    return 'تاريخ غير محدد';
+                }
+                
+                return date.toLocaleDateString('ar-EG', options);
+            } catch (error) {
+                console.error('خطأ في تنسيق التاريخ:', error);
+                return 'تاريخ غير محدد';
+            }
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط¥ظ„ط؛ط§ط، ظ‡ط°ط§ ط§ظ„ط­ط¬ط²طں')) {
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
+                
+                // ط­ظپط¸ ط§ظ„ظ‚ط§ط¦ظ…ط© ط§ظ„ظ…ط­ط¯ط«ط© ط¨ط¹ط¯ ط§ظ„ط¥ظ„ط؛ط§ط،
+                localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+                
+                // ط¹ط±ط¶ ط±ط³ط§ظ„ط© ظ†ط¬ط§ط­ ظ…ط¤ظ‚طھط©
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    <strong>طھظ… ط§ظ„ط¥ظ„ط؛ط§ط،!</strong> طھظ… ط¥ظ„ط؛ط§ط، ط§ظ„ط­ط¬ط² ط¨ظ†ط¬ط§ط­.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                const bookingsCard = document.querySelector('.card');
+                bookingsCard.insertBefore(alertDiv, bookingsCard.firstChild);
+                
+                // ط¥ط®ظپط§ط، ط§ظ„ط±ط³ط§ظ„ط© ط¨ط¹ط¯ 3 ط«ظˆط§ظ†ظچ
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 3000);
+                
+                // طھط­ط¯ظٹط« ط¹ط±ط¶ ط§ظ„ط­ط¬ظˆط²ط§طھ
+                displayBookings();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        function getRatingStars(rating) {
+            rating = parseInt(rating) || 0;
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="bi bi-star-fill text-warning"></i> ';
+                } else {
+                    stars += '<i class="bi bi-star text-muted"></i> ';
+                }
+            }
+            return stars;
+        }
+
+        let currentBookingId = '';
+        let currentWorkerId = '';
+        let selectedRatingValue = 0;
+
+        function showRatingForm(bookingId, workerId, workerName) {
+            currentBookingId = bookingId;
+            currentWorkerId = workerId;
+            selectedRatingValue = 0; // ط¥ط¹ط§ط¯ط© طھط¹ظٹظٹظ† ط§ظ„ظ‚ظٹظ…ط© ط¹ظ†ط¯ ظپطھط­ ط§ظ„ظ†ظ…ظˆط°ط¬
+            
+            // طھط¹ظٹظٹظ† ط§ط³ظ… ط§ظ„ط­ط±ظپظٹ ظپظٹ ط§ظ„ظ†ظ…ظˆط°ط¬
+            document.getElementById('ratingWorkerName').textContent = `ظƒظٹظپ ظƒط§ظ†طھ طھط¬ط±ط¨طھظƒ ظ…ط¹ ${workerName}طں`;
+            
+            // ط¥ط¹ط§ط¯ط© طھط¹ظٹظٹظ† ظ†ظ…ظˆط°ط¬ ط§ظ„طھظ‚ظٹظٹظ…
+            document.querySelectorAll('input[name="rating"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('ratingComment').value = '';
+            
+            // طھط¹ظٹظٹظ† ظ…ط¹ط§ظ„ط¬ ط§ظ„ط­ط¯ط« ظ„ط²ط± ط§ظ„ط¥ط±ط³ط§ظ„
+            document.getElementById('submitRating').onclick = submitWorkerRating;
+            
+            // ط¥ط¶ط§ظپط© ظ…ط³طھظ…ط¹ ط§ظ„ط£ط­ط¯ط§ط« ظ„ط¥ط¹ط§ط¯ط© طھط¹ظٹظٹظ† ط§ظ„طھظ‚ظٹظٹظ… ط¹ظ†ط¯ ط¥ط؛ظ„ط§ظ‚ ط§ظ„ظ†ظ…ظˆط°ط¬
+            const ratingModalElement = document.getElementById('ratingModal');
+            ratingModalElement.addEventListener('hidden.bs.modal', resetRatingForm);
+            
+            // ط¹ط±ط¶ ط§ظ„ظ†ظ…ظˆط°ط¬
+            const ratingModal = new bootstrap.Modal(ratingModalElement);
+            ratingModal.show();
+        }
+        
+        function resetRatingForm() {
+            selectedRatingValue = 0;
+            document.querySelectorAll('input[name="rating"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('ratingComment').value = '';
+            console.log('طھظ… ط¥ط¹ط§ط¯ط© طھط¹ظٹظٹظ† ظ†ظ…ظˆط°ط¬ ط§ظ„طھظ‚ظٹظٹظ…');
+        }
+
+        function selectRating(value) {
+            selectedRatingValue = value;
+            // طھط­ط¯ظٹط¯ ط§ظ„ط±ط§ط¯ظٹظˆ ط¨ظˆطھظˆظ† ط§ظ„ظ…ظ†ط§ط³ط¨
+            document.getElementById('star' + value).checked = true;
+            console.log('طھظ… ط§ط®طھظٹط§ط± طھظ‚ظٹظٹظ…: ' + value);
+        }
+
+        function submitWorkerRating() {
+            if (!selectedRatingValue) {
+                alert('ط§ظ„ط±ط¬ط§ط، ط§ط®طھظٹط§ط± طھظ‚ظٹظٹظ…');
+                return;
+            }
+            
+            const comment = document.getElementById('ratingComment').value.trim();
+            
+            // طھط­ط¯ظٹط« ط¨ظٹط§ظ†ط§طھ ط§ظ„ط­ط¬ط² ظ„طھط³ط¬ظٹظ„ ط§ظ„طھظ‚ظٹظٹظ…
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const bookingIndex = bookings.findIndex(b => b.id === currentBookingId);
+            
+            if (bookingIndex >= 0) {
+                bookings[bookingIndex].rated = true;
+                bookings[bookingIndex].rating = selectedRatingValue;
+                bookings[bookingIndex].ratingComment = comment;
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+            }
+            
+            // طھط­ط¯ظٹط« طھظ‚ظٹظٹظ… ط§ظ„ط­ط±ظپظٹ ظپظٹ ظ‚ط§ط¹ط¯ط© ط§ظ„ط¨ظٹط§ظ†ط§طھ
+            updateWorkerRating(currentWorkerId, selectedRatingValue);
+            
+            // ط¥ط؛ظ„ط§ظ‚ ط§ظ„ظ†ظ…ظˆط°ط¬
+            bootstrap.Modal.getInstance(document.getElementById('ratingModal')).hide();
+            
+            // ط¹ط±ط¶ ط±ط³ط§ظ„ط© ظ†ط¬ط§ط­
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show mt-3';
+            alertDiv.innerHTML = `
+                <strong>ط´ظƒط±ط§ظ‹ ظ„ظƒ!</strong> طھظ… ط¥ط±ط³ط§ظ„ طھظ‚ظٹظٹظ…ظƒ ط¨ظ†ط¬ط§ط­.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            const bookingsCard = document.querySelector('.card');
+            bookingsCard.insertBefore(alertDiv, bookingsCard.firstChild);
+            
+            // ط¥ط®ظپط§ط، ط§ظ„ط±ط³ط§ظ„ط© ط¨ط¹ط¯ 3 ط«ظˆط§ظ†ظچ
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+            
+            // طھط­ط¯ظٹط« ط¹ط±ط¶ ط§ظ„ط­ط¬ظˆط²ط§طھ
+            displayBookings();
+        }
+
+        function updateWorkerRating(workerId, newRating) {
+            if (!workerId) return;
+
+            // ط§ظ„ط¨ط­ط« ط¹ظ† ط§ظ„ط­ط±ظپظٹ ظپظٹ ظ‚ط§ط¹ط¯ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const workerIndex = users.findIndex(user => user.id === workerId);
+
+            if (workerIndex >= 0) {
+                const worker = users[workerIndex];
+                
+                // طھط­ط¯ظٹط« ط¹ط¯ط¯ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ ظˆظ…طھظˆط³ط· ط§ظ„طھظ‚ظٹظٹظ…
+                if (!worker.reviews) worker.reviews = 0;
+                if (!worker.totalRating) worker.totalRating = 0;
+                
+                worker.reviews++;
+                worker.totalRating += newRating;
+                worker.rating = (worker.totalRating / worker.reviews).toFixed(1);
+                
+                users[workerIndex] = worker;
+                localStorage.setItem('users', JSON.stringify(users));
+            } else {
+                // ط¥ط°ط§ ظ„ظ… ظٹطھظ… ط§ظ„ط¹ط«ظˆط± ط¹ظ„ظ‰ ط§ظ„ط­ط±ظپظٹ ظپظٹ ظ‚ط§ط¹ط¯ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†طŒ ظپظ‚ط¯ ظٹظƒظˆظ† ظپظٹ ظ‚ط§ط¹ط¯ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ط­ط±ظپظٹظٹظ†
+                // ط§ط³طھط¯ط¹ط§ط، ط§ظ„طھط¹ط¯ظٹظ„ط§طھ ط¹ظ„ظ‰ ظ‚ط§ط¹ط¯ط© ط¨ظٹط§ظ†ط§طھ ط§ظ„ط­ط±ظپظٹظٹظ† (workers.js)
+                updateWorkerDatabaseRating(workerId, newRating);
+            }
+        }
+        
+        function updateWorkerDatabaseRating(workerId, newRating) {
+            // ط§ظ„ط­طµظˆظ„ ط¹ظ„ظ‰ ط¬ظ…ظٹط¹ ط§ظ„ط­ط±ظپظٹظٹظ† ظ…ظ† ظ‚ط§ط¹ط¯ط© ط§ظ„ط¨ظٹط§ظ†ط§طھ
+            try {
+                // طھظ… طھط­ظˆظٹظ„ parseInt ط¥ظ„ظ‰ Number ظ„ظ„ط­طµظˆظ„ ط¹ظ„ظ‰ ظ‚ظٹظ…ط© ط¹ط¯ط¯ظٹط© ظ…ظ† workerId
+                const workerIdNumber = Number(workerId);
+                if (isNaN(workerIdNumber)) return;
+                
+                for (const profession in window.workersDatabase) {
+                    const workers = window.workersDatabase[profession];
+                    const workerIndex = workers.findIndex(w => w.id === workerIdNumber);
+                    
+                    if (workerIndex >= 0) {
+                        const worker = workers[workerIndex];
+                        
+                        // طھط­ط¯ظٹط« ط¹ط¯ط¯ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ ظˆظ…طھظˆط³ط· ط§ظ„طھظ‚ظٹظٹظ…
+                        if (!worker.reviews) worker.reviews = 0;
+                        worker.reviews++;
+                        
+                        // طھط­ط¯ظٹط« ط§ظ„طھظ‚ظٹظٹظ… ظ…ط¹ ط§ظ„ط­ظپط§ط¸ ط¹ظ„ظ‰ طھظ†ط³ظٹظ‚ ط§ظ„ط¹ط´ط±ظٹ
+                        const oldRating = parseFloat(worker.rating) || 0;
+                        const totalRatings = worker.reviews - 1; // ط¹ط¯ط¯ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ ظ‚ط¨ظ„ ط§ظ„ط¥ط¶ط§ظپط©
+                        
+                        const newAverageRating = ((oldRating * totalRatings) + newRating) / worker.reviews;
+                        worker.rating = newAverageRating.toFixed(1);
+                        
+                        // ظ†ط¸ط±ط§ظ‹ ظ„ط£ظ† ظ‡ط°ط§ ط§ظ„طھط­ط¯ظٹط« ظ…ط¤ظ‚طھطŒ ظپظٹظ…ظƒظ† ط§ط³طھط®ط¯ط§ظ… localStorage ظ„طھط®ط²ظٹظ† ط§ظ„ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…ط­ط¯ط«ط©
+                        localStorage.setItem('updatedWorkerRatings', JSON.stringify({
+                            workerId: workerIdNumber,
+                            newRating: newAverageRating,
+                            reviews: worker.reviews
+                        }));
+                        
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.error('ط®ط·ط£ ظپظٹ طھط­ط¯ظٹط« طھظ‚ظٹظٹظ… ط§ظ„ط­ط±ظپظٹ:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز موعد - منصة الحرفيين</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .worker-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #007bff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .worker-image:hover {
+            transform: scale(1.05);
+        }
+        .worker-info {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .booking-form {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .time-slot {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .time-slot:hover {
+            background-color: #f8f9fa;
+        }
+        .time-slot.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .price-details {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        .reviews {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .worker-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .worker-profession {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        .worker-description {
+            color: #495057;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        /* إضافة أنماط جديدة للنافذة المنبثقة */
+        .modal-success {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .success-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .redirect-message {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .countdown {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .gallery-modal-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        /* أنماط معرض الصور */
+        .gallery-thumbnail {
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100px;
+            transition: transform 0.3s ease;
+        }
+        .gallery-thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .gallery-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* أنماط وسائل الدفع */
+        .payment-method-card,
+        .payment-timing-option {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .payment-method-card .card,
+        .payment-timing-option .card {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .payment-method-card .card:hover,
+        .payment-timing-option .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .payment-method-card.selected .card,
+        .payment-timing-option.selected .card {
+            border-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        .payment-method-card img {
+            object-fit: contain;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo.svg" alt="منصة الحرفيين" height="40">
+            </a>
+            <a href="#" id="backButton" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-right"></i> العودة للخلف
+            </a>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- معلومات الحرفي -->
+            <div class="col-md-4">
+                <div class="worker-info text-center">
+                    <img id="workerImage" src="" alt="صورة الحرفي" class="worker-image mb-3">
+                    <h3 id="workerName" class="worker-name"></h3>
+                    <p id="workerProfession" class="worker-profession"></p>
+                    <div class="rating mb-2">
+                        <i class="bi bi-star-fill"></i>
+                        <span id="workerRating"></span>
+                        <span class="reviews">(<span id="workerReviews"></span> تقييم)</span>
+                    </div>
+                    <p id="workerDescription" class="worker-description"></p>
+                    <div class="price-details">
+                        <h5>سعر الخدمة: <span id="workerPrice" class="text-primary"></span> ج.م</h5>
+                    </div>
+                    
+                    <!-- معرض أعمال الحرفي -->
+                    <div class="mt-4" id="workerGallerySection">
+                        <h5>معرض الأعمال</h5>
+                        <div id="workerGallery" class="row g-2 mt-2">
+                            <!-- سيتم عرض معرض الصور هنا -->
+                            <p class="text-muted text-center" id="noGalleryMessage">
+                                لا توجد صور في معرض الأعمال
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نموذج الحجز -->
+            <div class="col-md-8">
+                <div class="booking-form">
+                    <h3 class="mb-4">حجز موعد</h3>
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label for="serviceType" class="form-label">نوع الخدمة</label>
+                            <select class="form-select" id="serviceType" required>
+                                <option value="">اختر نوع الخدمة</option>
+                                <!-- سيتم إضافة أنواع الخدمات ديناميكياً حسب مهنة الحرفي -->
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bookingDate" class="form-label">تاريخ الحجز</label>
+                            <input type="date" class="form-control" id="bookingDate" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">اختر الوقت</label>
+                            <div class="row" id="timeSlots">
+                                <!-- سيتم إضافة الأوقات ديناميكياً -->
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="clientName" class="form-label">اسم العميل</label>
+                            <input type="text" class="form-control" id="clientName" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="clientEmail" class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="clientEmail" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="clientPhone" class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="clientPhone" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">عنوان العمل</label>
+                            <textarea class="form-control" id="address" rows="3" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">ملاحظات إضافية</label>
+                            <textarea class="form-control" id="notes" rows="3"></textarea>
+                        </div>
+
+                        <div class="price-details">
+                            <h5>تفاصيل السعر</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>سعر الخدمة:</span>
+                                <span id="servicePrice">0 ج.م</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>رسوم الحجز:</span>
+                                <span>50 ج.م</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold">المجموع:</span>
+                                <span id="totalPrice" class="fw-bold">0 ج.م</span>
+                            </div>
+                        </div>
+                        
+                        <!-- قسم وسائل الدفع -->
+                        <div class="payment-section mt-4">
+                            <h5 class="mb-3">اختر وسيلة الدفع</h5>
+                            
+                            <div class="payment-methods mb-4">
+                                <div class="row g-2">
+                                    <div class="col-6 col-md-3">
+                                        <div class="payment-method-card" data-payment="cash">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center p-2">
+                                                    <div class="payment-logo payment-logo-cash"></div>
+                                                    <p class="mb-0 small">الدفع نقداً</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="payment-method-card" data-payment="vodafone-cash">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center p-2">
+                                                    <div class="payment-logo payment-logo-vodafone"></div>
+                                                    <p class="mb-0 small">فودافون كاش</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="payment-method-card" data-payment="instapay">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center p-2">
+                                                    <div class="payment-logo payment-logo-instapay"></div>
+                                                    <p class="mb-0 small">انستا باي</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="payment-method-card" data-payment="fawry">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center p-2">
+                                                    <div class="payment-logo payment-logo-fawry"></div>
+                                                    <p class="mb-0 small">فوري</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- حقول بيانات وسائل الدفع -->
+                            <div id="payment-details-container" class="payment-details mb-4 d-none">
+                                <!-- تفاصيل الدفع النقدي -->
+                                <div id="cash-details" class="payment-method-details d-none">
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary mb-3">تفاصيل الدفع النقدي</h6>
+                                            <div class="mb-3">
+                                                <label for="cash-notes" class="form-label">ملاحظات إضافية للدفع</label>
+                                                <textarea id="cash-notes" class="form-control" rows="2" placeholder="مثال: تحضير المبلغ بالضبط، توفير فكة معينة، إلخ..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- تفاصيل فودافون كاش -->
+                                <div id="vodafone-cash-details" class="payment-method-details d-none">
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary mb-3">تفاصيل فودافون كاش</h6>
+                                            <div class="mb-3">
+                                                <label for="vodafone-number" class="form-label">رقم هاتف فودافون كاش <span class="text-danger">*</span></label>
+                                                <input type="tel" id="vodafone-number" class="form-control" placeholder="أدخل رقم الهاتف المسجل بخدمة فودافون كاش">
+                                                <div class="form-text">سيتم استخدام هذا الرقم لإتمام عملية الدفع</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- تفاصيل انستا باي -->
+                                <div id="instapay-details" class="payment-method-details d-none">
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary mb-3">تفاصيل انستا باي</h6>
+                                            <div class="mb-3">
+                                                <label for="instapay-number" class="form-label">رقم الهاتف المسجل بانستا باي <span class="text-danger">*</span></label>
+                                                <input type="tel" id="instapay-number" class="form-control" placeholder="أدخل رقم الهاتف">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="instapay-id" class="form-label">رقم التعريف الشخصي <span class="text-danger">*</span></label>
+                                                <input type="text" id="instapay-id" class="form-control" placeholder="أدخل رقم التعريف الشخصي أو البريد الإلكتروني">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- تفاصيل فوري -->
+                                <div id="fawry-details" class="payment-method-details d-none">
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary mb-3">تفاصيل فوري</h6>
+                                            <div class="mb-3">
+                                                <label for="fawry-phone" class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
+                                                <input type="tel" id="fawry-phone" class="form-control" placeholder="أدخل رقم الهاتف للدفع">
+                                            </div>
+                                            <div class="form-text mb-3">سيتم إرسال رمز الدفع إلى هذا الرقم</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-timing mb-4">
+                                <h5 class="mb-3">وقت الدفع</h5>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="payment-timing-option" data-timing="upfront">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center p-3">
+                                                    <i class="bi bi-cash-coin text-success display-6 mb-2"></i>
+                                                    <h6 class="mb-0">دفع مقدم</h6>
+                                                    <p class="small text-muted mb-0">دفع كامل المبلغ قبل الخدمة</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="payment-timing-option" data-timing="after">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center p-3">
+                                                    <i class="bi bi-clock-history text-primary display-6 mb-2"></i>
+                                                    <h6 class="mb-0">دفع بعد الإنجاز</h6>
+                                                    <p class="small text-muted mb-0">دفع بعد اكتمال الخدمة</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-4">
+                            تأكيد الحجز
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة نجاح الحجز -->
+    <div class="modal-success" id="successModal">
+        <div class="modal-content">
+            <i class="bi bi-check-circle-fill success-icon"></i>
+            <h3 class="success-message">تم تأكيد حجزك بنجاح!</h3>
+            <p class="redirect-message">سيتم تحويلك إلى لوحة التحكم خلال <span class="countdown">5</span> ثوانٍ</p>
+            <button class="btn btn-primary" onclick="redirectToDashboard()">الذهاب إلى لوحة التحكم الآن</button>
+        </div>
+    </div>
+
+    <div id="confirmationMessage" class="alert alert-success d-none" role="alert">
+      تم تأكيد الحجز بنجاح! سيتم توجيهك إلى الصفحة الرئيسية خلال <span id="countdown">5</span> ثوانٍ.
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/workers.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // إعداد زر العودة للخلف
+            const backButton = document.getElementById('backButton');
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // استعادة المعلومات من sessionStorage لاستخدامها في الرجوع
+                const profession = sessionStorage.getItem('selectedProfession');
+                const location = sessionStorage.getItem('selectedLocation');
+                let budget = sessionStorage.getItem('selectedBudget');
+                
+                // إذا لم يتم العثور على الميزانية، استخدم قيمة افتراضية
+                if (!budget) {
+                    budget = 'all';
+                }
+                
+                // إنشاء عنوان URL للعودة يحتوي على المعلومات المطلوبة
+                let backUrl = 'workers-list.html';
+                if (profession) {
+                    backUrl += `?profession=${encodeURIComponent(profession)}`;
+                    
+                    if (budget) {
+                        backUrl += `&budget=${budget}`;
+                    }
+                    
+                    if (location) {
+                        backUrl += `&location=${encodeURIComponent(location)}`;
+                    }
+                }
+                
+                // التوجه إلى الصفحة السابقة
+                window.location.href = backUrl;
+            });
+            
+            // التحقق من تسجيل الدخول
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                alert('يجب تسجيل الدخول أولاً لحجز موعد');
+                window.location.href = 'login.html?redirect=booking';
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const workerId = urlParams.get('id');
+            
+            if (!workerId) {
+                alert('لم يتم تحديد الحرفي بشكل صحيح');
+                window.location.href = 'workers-list.html';
+                return;
+            }
+            
+            // محاولة الحصول على الحرفي باستخدام المعرف
+            let worker;
+            try {
+                console.log('جاري البحث عن الحرفي بالمعرف:', workerId);
+                
+                // أولاً نحاول الحصول على الحرفي باستخدام المعرف كما هو
+                worker = getWorkerById(workerId);
+                
+                // لتحسين التوافق مع الروابط، نجرب بعض الاحتمالات الإضافية
+                if (!worker) {
+                    console.log('تجربة معرفات بديلة للحرفي');
+                    
+                    // محاولة إزالة الـ prefix إذا كان موجوداً
+                    if (typeof workerId === 'string' && workerId.includes('_')) {
+                        const idParts = workerId.split('_');
+                        const cleanId = idParts[idParts.length - 1];
+                        console.log('محاولة معرف نظيف:', cleanId);
+                        worker = getWorkerById(cleanId);
+                    }
+                    
+                    // محاولة قراءة معرف من التخزين المؤقت للصفحة
+                    if (!worker && sessionStorage.getItem('selectedWorkerId')) {
+                        const cachedId = sessionStorage.getItem('selectedWorkerId');
+                        console.log('استخدام معرف من التخزين المؤقت:', cachedId);
+                        worker = getWorkerById(cachedId);
+                    }
+                    
+                    // محاولة الوصول إلى قائمة الحرفيين ديناميكياً
+                    if (!worker) {
+                        const profession = sessionStorage.getItem('selectedProfession');
+                        const location = sessionStorage.getItem('selectedLocation');
+                        
+                        if (profession) {
+                            console.log('محاولة البحث بالمهنة:', profession);
+                            const workers = getWorkersByProfession(profession);
+                            
+                            if (location && location !== 'كل المواقع') {
+                                // البحث عن حرفي في موقع محدد
+                                worker = workers.find(w => w.location === location);
+                            } else if (workers.length > 0) {
+                                // أخذ أول حرفي متاح
+                                worker = workers[0];
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('خطأ في الحصول على بيانات الحرفي:', error);
+            }
+
+            if (!worker) {
+                console.error('لم يتم العثور على الحرفي، المعرف:', workerId);
+                alert('لم يتم العثور على الحرفي المطلوب، سيتم توجيهك إلى صفحة قائمة الحرفيين');
+                
+                // قبل إعادة التوجيه، نحاول تخزين معلومات عن المشكلة
+                const debugInfo = {
+                    id: workerId,
+                    date: new Date().toISOString(),
+                    url: window.location.href
+                };
+                
+                // تخزين معلومات التصحيح
+                localStorage.setItem('lastWorkerLookupError', JSON.stringify(debugInfo));
+                
+                // إعادة التوجيه إلى قائمة الحرفيين
+                setTimeout(() => {
+                    window.location.href = 'workers-list.html';
+                }, 100);
+                return;
+            }
+
+            // تخزين المعرف في التخزين المؤقت للصفحة لتحسين الاستمرارية
+            sessionStorage.setItem('selectedWorkerId', worker.id);
+            if (worker.profession) {
+                sessionStorage.setItem('selectedProfession', worker.profession);
+            }
+            if (worker.location) {
+                sessionStorage.setItem('selectedLocation', worker.location);
+            }
+            
+            // الحصول على الميزانية من العنوان URL إذا كانت متوفرة
+            const budget = urlParams.get('budget');
+            if (budget) {
+                sessionStorage.setItem('selectedBudget', budget);
+            }
+
+            // عرض معلومات الحرفي
+            document.getElementById('workerImage').src = worker.image;
+           
+            // إذا كان الحرفي مستخدم مسجل، تحقق من وجود صورة شخصية
+            if (worker.isRegisteredUser) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const workerUser = users.find(user => user.id === worker.id && user.role === 'worker');
+                if (workerUser && workerUser.profileImage) {
+                    document.getElementById('workerImage').src = workerUser.profileImage;
+                }
+            }
+           
+            document.getElementById('workerName').textContent = worker.name;
+            document.getElementById('workerProfession').textContent = worker.profession;
+            document.getElementById('workerRating').textContent = worker.rating;
+            document.getElementById('workerReviews').textContent = worker.reviews;
+            document.getElementById('workerDescription').textContent = worker.description;
+            document.getElementById('workerPrice').textContent = worker.price;
+            document.getElementById('servicePrice').textContent = worker.price + ' ج.م';
+            document.getElementById('totalPrice').textContent = (worker.price + 50) + ' ج.م';
+
+            // إضافة أنواع الخدمات حسب المهنة
+            updateServiceTypes(worker.profession);
+            
+            // تحميل ومعالجة معرض أعمال الحرفي
+            loadWorkerGallery(workerId);
+            
+            // تعيين الحد الأدنى للتاريخ (اليوم)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+
+            // إنشاء قائمة الأوقات
+            const timeSlots = [
+                '09:00 ص', '10:00 ص', '11:00 ص', '12:00 م',
+                '01:00 م', '02:00 م', '03:00 م', '04:00 م',
+                '05:00 م', '06:00 م', '07:00 م', '08:00 م'
+            ];
+
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            timeSlots.forEach(time => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-6 mb-2';
+                col.innerHTML = `
+                    <div class="time-slot text-center" data-time="${time}">
+                        ${time}
+                    </div>
+                `;
+                timeSlotsContainer.appendChild(col);
+            });
+
+            // إضافة حدث النقر على الأوقات
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // إضافة حدث النقر على وسائل الدفع
+            document.querySelectorAll('.payment-method-card').forEach(method => {
+                method.addEventListener('click', function() {
+                    // إزالة التحديد السابق
+                    document.querySelectorAll('.payment-method-card').forEach(m => m.classList.remove('selected'));
+                    // تحديد الوسيلة المختارة
+                    this.classList.add('selected');
+                    
+                    // عرض حقول التفاصيل المناسبة
+                    showPaymentDetails(this.dataset.payment);
+                });
+            });
+
+            // وظيفة لعرض حقول تفاصيل وسيلة الدفع المحددة
+            function showPaymentDetails(paymentMethod) {
+                // إخفاء جميع حقول التفاصيل
+                document.querySelectorAll('.payment-method-details').forEach(details => {
+                    details.classList.add('d-none');
+                });
+                
+                // عرض حاوية تفاصيل الدفع
+                const detailsContainer = document.getElementById('payment-details-container');
+                detailsContainer.classList.remove('d-none');
+                
+                // عرض التفاصيل المناسبة حسب وسيلة الدفع
+                const detailsElement = document.getElementById(`${paymentMethod}-details`);
+                if (detailsElement) {
+                    detailsElement.classList.remove('d-none');
+                }
+                
+                // تفعيل أو تعطيل الحقول المطلوبة حسب وسيلة الدفع
+                updateRequiredPaymentFields(paymentMethod);
+            }
+            
+            // تحديث الحقول المطلوبة حسب وسيلة الدفع
+            function updateRequiredPaymentFields(paymentMethod) {
+                // إزالة خاصية "required" من جميع حقول الدفع
+                ['vodafone-number', 'instapay-number', 'instapay-id', 'fawry-phone'].forEach(id => {
+                    const field = document.getElementById(id);
+                    if (field) {
+                        field.removeAttribute('required');
+                    }
+                });
+                
+                // إضافة خاصية "required" للحقول المطلوبة حسب وسيلة الدفع
+                switch(paymentMethod) {
+                    case 'vodafone-cash':
+                        document.getElementById('vodafone-number').setAttribute('required', 'required');
+                        break;
+                    case 'instapay':
+                        document.getElementById('instapay-number').setAttribute('required', 'required');
+                        document.getElementById('instapay-id').setAttribute('required', 'required');
+                        break;
+                    case 'fawry':
+                        document.getElementById('fawry-phone').setAttribute('required', 'required');
+                        break;
+                }
+            }
+
+            // إضافة حدث النقر على وقت الدفع
+            document.querySelectorAll('.payment-timing-option').forEach(timing => {
+                timing.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-timing-option').forEach(t => t.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // معالجة نموذج الحجز
+            document.getElementById('bookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const selectedTime = document.querySelector('.time-slot.selected');
+                if (!selectedTime) {
+                    alert('الرجاء اختيار وقت الحجز');
+                    return;
+                }
+
+                // Capture client details from the form
+                const clientName = document.getElementById('clientName').value;
+                const clientEmail = document.getElementById('clientEmail').value;
+                const clientPhone = document.getElementById('clientPhone').value;
+
+                // Ensure client details are available
+                if (!clientName || !clientEmail || !clientPhone) {
+                    alert('الرجاء ملء جميع بيانات العميل');
+                    return;
+                }
+
+                // إنشاء معرف فريد للحجز
+                const bookingId = 'booking_' + Date.now();
+
+                // جمع البيانات وحفظها في التخزين المحلي
+                const bookingData = {
+                    id: bookingId,
+                    workerId: worker.id,
+                    workerName: worker.name,
+                    workerProfession: worker.profession,
+                    date: document.getElementById('bookingDate').value,
+                    time: selectedTime.dataset.time,
+                    address: document.getElementById('address').value,
+                    serviceType: document.getElementById('serviceType').value,
+                    serviceDetails: document.getElementById('notes').value,
+                    clientName: clientName,
+                    clientEmail: clientEmail,
+                    clientPhone: clientPhone,
+                    price: worker.price,
+                    totalPrice: worker.price + 50,
+                    status: 'معلق',
+                    bookingDate: new Date().toISOString(),
+                    paymentMethod: document.querySelector('.payment-method-card.selected')?.dataset.payment || 'cash',
+                    paymentTiming: document.querySelector('.payment-timing-option.selected')?.dataset.timing || 'after',
+                    paymentDetails: getPaymentDetails()
+                };
+
+                console.log('تم إنشاء بيانات الحجز:', bookingData);
+
+                // حفظ بيانات الحجز في localStorage
+                let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                bookings.push(bookingData);
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+
+                // حفظ تفاصيل الحجز كحجز أخير
+                localStorage.setItem('lastBooking', JSON.stringify(bookingData));
+                console.log('تم حفظ الحجز الأخير:', JSON.stringify(bookingData));
+
+                // عرض نافذة النجاح
+                showSuccessModal();
+            });
+        });
+
+        // عرض نافذة النجاح
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'block';
+
+            let countdown = 5;
+            const countdownElement = document.querySelector('.countdown');
+            
+            const timer = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    redirectToDashboard();
+                }
+            }, 1000);
+        }
+
+        // إعادة التوجيه إلى لوحة التحكم
+        function redirectToDashboard() {
+            console.log('جاري التوجيه إلى لوحة التحكم...');
+            // تأخير ملي ثانية لضمان حفظ البيانات قبل التوجيه
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 100);
+        }
+
+        // إضافة أنواع الخدمات حسب المهنة
+        function updateServiceTypes(profession) {
+            const serviceTypeSelect = document.getElementById('serviceType');
+            serviceTypeSelect.innerHTML = '<option value="">اختر نوع الخدمة</option>';
+            
+            // تعريف قائمة الخدمات حسب المهنة
+            const servicesByProfession = {
+                'نجار': ['تركيب أثاث', 'صيانة أثاث', 'صناعة أثاث حسب الطلب', 'تركيب أبواب ونوافذ', 'تركيب أرضيات خشبية', 'إصلاح أضرار الخشب'],
+                'سباك': ['إصلاح تسربات', 'تركيب حنفيات وخلاطات', 'تركيب أدوات صحية', 'صيانة شبكات المياه', 'إصلاح مضخات المياه', 'تركيب سخانات المياه'],
+                'كهربائي': ['تركيب إنارة', 'صيانة دوائر كهربائية', 'تركيب مفاتيح وبرايز', 'إصلاح أعطال كهربائية', 'تركيب أنظمة أمان', 'توصيل وصيانة أجهزة كهربائية'],
+                'بناء': ['بناء جدران', 'ترميم وإصلاح', 'أعمال اللياسة والطينة', 'تركيب أحجار ديكور', 'تشطيبات داخلية', 'تبليط'],
+                'دهان': ['دهان داخلي', 'دهان خارجي', 'دهان أثاث', 'ورق جدران', 'دهان ديكوري', 'إزالة دهان قديم'],
+                'حداد': ['تصنيع أبواب حديد', 'تصنيع نوافذ حديد', 'تصنيع هياكل معدنية', 'تصنيع درابزين وسلالم', 'إصلاح وصيانة أعمال حديد', 'تركيب حماية للنوافذ والشرفات'],
+                'ميكانيكي': ['صيانة محركات', 'إصلاح أنظمة التبريد', 'إصلاح فرامل', 'تغيير زيت ومرشحات', 'إصلاح أنظمة التعليق', 'تشخيص أعطال إلكترونية'],
+                'فني تكييف': ['تركيب مكيفات', 'صيانة مكيفات', 'إصلاح أعطال التبريد', 'تعبئة غاز التبريد', 'تنظيف وحدات التكييف', 'تركيب قطع غيار'],
+                'فني أجهزة منزلية': ['إصلاح غسالات', 'إصلاح ثلاجات', 'إصلاح أفران', 'إصلاح مكيفات', 'إصلاح سخانات', 'إصلاح أجهزة صغيرة'],
+                'مبلط': ['تركيب بلاط', 'تركيب سيراميك', 'تركيب رخام', 'تركيب جرانيت', 'تجديد فواصل البلاط', 'إزالة بلاط قديم']
+            };
+            
+            // الخدمات الافتراضية إذا لم تكن المهنة في القائمة
+            const defaultServices = ['تركيب', 'صيانة', 'إصلاح', 'استشارة'];
+            
+            // تحديد الخدمات المناسبة
+            const services = servicesByProfession[profession] || defaultServices;
+            
+            // إضافة الخدمات إلى القائمة المنسدلة
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service;
+                option.textContent = service;
+                serviceTypeSelect.appendChild(option);
+            });
+        }
+
+        // تحميل معرض أعمال الحرفي
+        function loadWorkerGallery(workerId) {
+            const workerGallery = document.getElementById('workerGallery');
+            const noGalleryMessage = document.getElementById('noGalleryMessage');
+            
+            // البحث عن الحرفي في قائمة المستخدمين
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const workerUser = users.find(user => user.id === workerId || user.id === 'user_' + workerId);
+            
+            // عرض رسالة إذا لم نجد الحرفي أو لم يكن لديه معرض
+            if (!workerUser || !workerUser.gallery || workerUser.gallery.length === 0) {
+                workerGallery.innerHTML = '';
+                noGalleryMessage.style.display = 'block';
+                return;
+            }
+            
+            // إخفاء رسالة عدم وجود صور
+            noGalleryMessage.style.display = 'none';
+            workerGallery.innerHTML = '';
+            
+            // عرض صور الحرفي
+            workerUser.gallery.forEach(imageData => {
+                const col = document.createElement('div');
+                col.className = 'col-4 col-md-3 mb-2';
+                col.innerHTML = `
+                    <div class="gallery-thumbnail" data-img="${imageData}">
+                        <img src="${imageData}" alt="صورة من معرض الأعمال" class="img-fluid">
+                    </div>
+                `;
+                workerGallery.appendChild(col);
+            });
+            
+            // إضافة وظيفة تكبير الصورة عند النقر عليها
+            document.querySelectorAll('.gallery-thumbnail').forEach(item => {
+                item.addEventListener('click', function() {
+                    const imageSrc = this.getAttribute('data-img');
+                    showGalleryImageInModal(imageSrc);
+                });
+            });
+        }
+        
+        // عرض صورة المعرض في نافذة منبثقة
+        function showGalleryImageInModal(src) {
+            // التحقق من وجود modal في الصفحة
+            if (!document.getElementById('galleryModal')) {
+                const modalHTML = `
+                    <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">معرض الأعمال</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="galleryModalImage" src="" alt="صورة العمل" style="max-width: 100%; max-height: 80vh;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+            
+            // تعيين مصدر الصورة وعرض النافذة المنبثقة
+            document.getElementById('galleryModalImage').src = src;
+            const galleryModal = new bootstrap.Modal(document.getElementById('galleryModal'));
+            galleryModal.show();
+        }
+
+        // جمع بيانات تفاصيل الدفع
+        function getPaymentDetails() {
+            const paymentMethod = document.querySelector('.payment-method-card.selected')?.dataset.payment || 'cash';
+            let details = {};
+            
+            switch(paymentMethod) {
+                case 'cash':
+                    details = {
+                        notes: document.getElementById('cash-notes')?.value || ''
+                    };
+                    break;
+                case 'vodafone-cash':
+                    details = {
+                        phoneNumber: document.getElementById('vodafone-number')?.value || ''
+                    };
+                    break;
+                case 'instapay':
+                    details = {
+                        phoneNumber: document.getElementById('instapay-number')?.value || '',
+                        personalId: document.getElementById('instapay-id')?.value || ''
+                    };
+                    break;
+                case 'fawry':
+                    details = {
+                        phoneNumber: document.getElementById('fawry-phone')?.value || ''
+                    };
+                    break;
+            }
+            
+            return details;
+        }
+    </script>
+</body>
+</html> 

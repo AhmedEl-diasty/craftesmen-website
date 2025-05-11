@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - منصة الحرفيين</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --secondary-color: #1e40af;
+    }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    
+    .login-container {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .form-control {
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid #dee2e6;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+    }
+    
+    .btn {
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: 600;
+    }
+    
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: var(--secondary-color);
+    }
+    
+    .role-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .role-btn {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid #dee2e6;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .role-btn:hover {
+      border-color: var(--primary-color);
+      background: rgba(37, 99, 235, 0.05);
+    }
+    
+    .role-btn.active {
+      border-color: var(--primary-color);
+      background: rgba(37, 99, 235, 0.1);
+    }
+    
+    .role-btn i {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .alert {
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="images/logo.svg" alt="منصة الحرفيين" height="40">
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="login-container">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">تسجيل الدخول</h4>
+        </div>
+        <div class="card-body p-4">
+          <div id="loginAlert" class="alert d-none" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <span id="loginAlertMessage"></span>
+          </div>
+          
+          <div class="role-selector">
+            <div class="role-btn active" data-role="user">
+              <i class="bi bi-person"></i>
+              <div>عميل</div>
+            </div>
+            <div class="role-btn" data-role="worker">
+              <i class="bi bi-tools"></i>
+              <div>حرفي</div>
+            </div>
+          </div>
+          
+          <form id="loginForm">
+            <div class="mb-3">
+              <label for="email" class="form-label">البريد الإلكتروني</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" class="form-control" id="email" required>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label">كلمة المرور</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="password" required>
+              </div>
+            </div>
+            
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">تذكرني</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 mb-3">
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              تسجيل الدخول
+            </button>
+            
+            <div class="text-center">
+              <a href="forgot-password.html" class="text-decoration-none">نسيت كلمة المرور؟</a>
+            </div>
+            
+            <!-- Debug button - for development only -->
+            <div class="mt-3">
+              <button type="button" id="createTestAccount" class="btn btn-sm btn-outline-secondary w-100">إنشاء حساب اختبار</button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center bg-light">
+          <p class="mb-0">ليس لديك حساب؟ <a href="register.html" class="text-decoration-none">إنشاء حساب جديد</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // وظيفة لتشفير كلمة المرور باستخدام Base64
+    function encryptPassword(password) {
+      // في الإصدار الحقيقي، يجب استخدام تشفير قوي على الخادم
+      // هذه وظيفة بسيطة لأغراض العرض فقط
+      // حل مشكلة الأحرف غير اللاتينية
+      try {
+        // Convert to UTF-8 first to handle Unicode characters
+        return btoa(unescape(encodeURIComponent(password)));
+      } catch (e) {
+        console.error('Encryption error:', e);
+        // Fallback to basic hash for demo purposes
+        return 'encoded_' + password;
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const roleSelector = document.querySelector('.role-selector');
+      const roleBtns = document.querySelectorAll('.role-btn');
+      const loginForm = document.getElementById('loginForm');
+      const loginAlert = document.getElementById('loginAlert');
+      const loginAlertMessage = document.getElementById('loginAlertMessage');
+      const createTestAccountBtn = document.getElementById('createTestAccount');
+      
+      let isSubmitting = false;
+      
+      // Create test account button
+      createTestAccountBtn.addEventListener('click', function() {
+        try {
+          // Get existing users
+          const users = JSON.parse(localStorage.getItem('users') || '[]');
+          
+          // Check if test user already exists
+          const existingUser = users.find(u => u.email === 'mazen@gmail.com');
+          if (existingUser) {
+            showAlert('حساب الاختبار موجود بالفعل', 'info');
+            console.log('Test account already exists:', existingUser);
+            return;
+          }
+          
+          // Create test user
+          const testUser = {
+            id: 'user_test_' + Date.now(),
+            name: 'مازن محمد',
+            email: 'mazen@gmail.com',
+            phone: '01234567890',
+            password: encryptPassword('As12345*'),
+            role: 'user',
+            createdAt: new Date().toISOString()
+          };
+          
+          // Add test user
+          users.push(testUser);
+          localStorage.setItem('users', JSON.stringify(users));
+          
+          // Show success message
+          showAlert('تم إنشاء حساب الاختبار بنجاح', 'success');
+          console.log('Created test account:', testUser);
+          
+          // Fill login form
+          document.getElementById('email').value = 'mazen@gmail.com';
+          document.getElementById('password').value = 'As12345*';
+          document.querySelector('.role-btn[data-role="user"]').click();
+        } catch (error) {
+          console.error('Error creating test account:', error);
+          showAlert('حدث خطأ أثناء إنشاء حساب الاختبار');
+        }
+      });
+      
+      // Role selection
+      roleBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          roleBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+      
+      // Form submission
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (isSubmitting) return;
+        isSubmitting = true;
+        
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+        const selectedRole = document.querySelector('.role-btn.active').dataset.role;
+        
+        // استرجاع بيانات المستخدمين من localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        console.log('Users data:', users);
+        console.log('Trying to login with:', { email, password, role: selectedRole });
+        
+        // البحث عن المستخدم المطابق
+        const user = users.find(u => 
+          u.email.toLowerCase() === email && 
+          u.password === encryptPassword(password) && 
+          u.role === selectedRole
+        );
+        
+        console.log('Found user:', user);
+        
+        if (user) {
+          showAlert('تم تسجيل الدخول بنجاح', 'success');
+          
+          // تخزين بيانات المستخدم الحالي
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          
+          // توجيه المستخدم إلى الصفحة المناسبة
+          setTimeout(() => {
+            if (user.role === 'worker') {
+              window.location.href = 'worker-dashboard.html';
+            } else {
+              window.location.href = 'dashboard.html';
+            }
+          }, 1000);
+        } else {
+          showAlert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+          isSubmitting = false;
+        }
+      });
+      
+      function showAlert(message, type = 'danger') {
+        const alertElement = document.getElementById('loginAlert');
+        const alertMessage = document.getElementById('loginAlertMessage');
+        
+        alertMessage.textContent = message;
+        alertElement.classList.remove('alert-danger', 'alert-success', 'd-none');
+        alertElement.classList.add(`alert-${type}`);
+        
+        if (type === 'success') {
+          setTimeout(() => {
+            alertElement.classList.add('d-none');
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            alertElement.classList.add('d-none');
+          }, 5000);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
