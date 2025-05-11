@@ -113,7 +113,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Full Stack Developer: Ahmed El-diasty
 - Role: Project Lead, Frontend Developer, Backend Developer, UI/UX Designer
 
-- مطور Full Stack: أحمد الديستي
+- مطور Full Stack: أحمد الديسطي
 - الدور: قائد المشروع، مطور الواجهة الأمامية، مطور الخلفية، مصمم واجهة المستخدم
 
 ## 📞 Contact | التواصل
