@@ -109,18 +109,14 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 هذا المشروع مرخص تحت رخصة MIT - راجع ملف LICENSE للحصول على التفاصيل.
 
-## 👥 Team | الفريق
-- Project Lead: [Your Name]
-- Frontend Developer: [Your Name]
-- Backend Developer: [Your Name]
-- UI/UX Designer: [Your Name]
+## 👥 Developer | المطور
+- Full Stack Developer: Ahmed El-diasty
+- Role: Project Lead, Frontend Developer, Backend Developer, UI/UX Designer
 
-- قائد المشروع: [اسمك]
-- مطور الواجهة الأمامية: [اسمك]
-- مطور الخلفية: [اسمك]
-- مصمم واجهة المستخدم: [اسمك]
+- مطور Full Stack: أحمد الديستي
+- الدور: قائد المشروع، مطور الواجهة الأمامية، مطور الخلفية، مصمم واجهة المستخدم
 
 ## 📞 Contact | التواصل
-For any inquiries or support, please reach out to us at [your-email@example.com]
+For any inquiries or support, please reach out to me at ab077amed@gmail.com
 
-للأسئلة أو الدعم، يرجى التواصل معنا على [your-email@example.com] 
+للأسئلة أو الدعم، يرجى التواصل معي على ab077amed@gmail.com 
